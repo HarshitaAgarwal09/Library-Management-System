@@ -128,15 +128,12 @@ public:
 // 	}
 // }
 
-int totalBooks;
 
 int locatnInDb(char bname[]){			//binary search the database of the book
 	ifstream fin("data.txt",ios::in);
+	int totalBooks;
 	fin >> totalBooks;
-	int totalBooksSize;
-	if(totalBooks < 256)totalBooksSize = 2;
-	else totalBooksSize = 4;
-	int beg = totalBooksSize;
+	int beg = sizeof(int);
 	int end = beg;
 	end += max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
 	int mid;
@@ -148,7 +145,7 @@ int locatnInDb(char bname[]){			//binary search the database of the book
 		}
 		mid = (beg + end) / 2;
 		mid -= (mid % sizeof(Books));
-		fin.seekg(mid + totalBooksSize, fin.beg);
+		fin.seekg(mid + sizeof(int), fin.beg);
 		Books book;
 		fin.read((char*)&book, sizeof(book));
 		char name[50];
@@ -159,7 +156,7 @@ int locatnInDb(char bname[]){			//binary search the database of the book
 		else beg = mid + sizeof(Books);
 	}
 
-	return mid + totalBooksSize;
+	return mid;
 }
 
 void AddBook(){
