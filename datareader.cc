@@ -50,16 +50,17 @@ public:
 		cin >> bookprice;
 	}
 };
-
+// 
 int main(){
-	ofstream fout("data.txt", ios::out);
-	Books b;
-	int tot = 0;
-	fout << tot;
-	// b.getBooksDetails();
-	// fout.write((char*)&b, sizeof(b));
-	// b.getBooksDetails();
-	// fout.write((char*)&b, sizeof(b));
-	fout.close();
-
+	ifstream fin("data.txt", ios::in);
+	// ifstream fin("newData.txt", ios::in);
+	int totl;
+	fin >> totl;
+	cout << "total books: " << totl << endl;
+	Books book;
+	while(fin.read((char*)&book, sizeof(book)))
+	{
+		book.printBookDetails();
+	}
+	fin.close();
 }

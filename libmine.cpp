@@ -5,46 +5,6 @@
 #include<cmath>
 using namespace std;
 
-// class Student {
-// private:
-// 	char name[50];
-// 	int Rollno;
-// 	int fine;
-// 	int booksissued = 0;
-// public:
-// 	getStudentDetails() {
-// 		cout << "Enter the name of student: ";
-// 		cin.getline(name, 50);
-// 		cout << "Enter the Roll no.: ";
-// 		cin >> Rollno;
-// 	}
-// 	printStudentDetails() {
-// 		cout << "Name of the Student: " << name << endl;
-// 		cout << "Rollno of the Student: " << Rollno << endl;
-// 		if (fine > 0) {
-// 			cout << "Fine of the Student: " << fine << endl;
-// 		}
-// 		else
-// 		{
-// 			cout << "No fine" << endl;
-// 		}
-// 		if (booksissued == 0) {
-// 			cout << "No Books Issued: " << endl;
-// 		}
-// 	}
-// 	modifyStudentDetails() {
-// 		cout << "Enter the modified name of Student: ";
-// 		gets(name);
-// 	}
-// 	int setbookissued() {
-// 		booksissued = 1;
-// 		return booksissued;
-// 	}
-// 	void resetbookissued() {
-// 		booksissued = 0;
-// 	}
-// };
-
 class Books{
 private:
 	char bookname[50];
@@ -54,17 +14,22 @@ private:
 	int NoOfIssuedBooks;
 	int NoOfLeftBooks;
 public:
-	Books(char bname[], char auth[], int bp, int nob, int noib, int nolb){
+	Books(char bname[], char auth[], int bp, int nob){
 		strcpy(bookname, bname);
 		strcpy(author, auth);
 		NoOfBooks = nob;
-		NoOfLeftBooks = nolb;
-		NoOfIssuedBooks = noib;
+		NoOfLeftBooks = nob;
+		NoOfIssuedBooks = 0;
 		bookprice = bp;
 	};
 	Books(){}
 	void nameOfBook(char name[]){
 		strcpy(name, bookname);
+	}
+
+	void addCopies(int a)
+	{
+		NoOfBooks += a;
 	}
 	// getBooksDetails() {
 	// 	cout << "Enter name of the book: ";
@@ -86,54 +51,22 @@ public:
 		cout << "Price of the Book: " << bookprice << endl;
 		cout << "Number of copies of Books: " << NoOfBooks << endl;
 	};
-	// modifyBookDetails() {
-	// 	cout << "Enter modified Books name: ";
-	// 	gets(bookname);
-	// 	cout << "Enter modified price: ";
-	// 	cin >> bookprice;
-	// }
 };
-
-// void write_Books() {
-// 	ofstream fout("books.txt");
-// 	char ch;
-// 	Books bk("hey", "hii", 1, 2, 3, 4);
-// 	do{
-// 		bk.getBooksDetails();
-// 		fout.write((char*)&bk, sizeof(bk));
-// 		cout << "Continue to add more books(Y/N)?" << endl;
-// 		cin >> ch;
-// 	}while(ch == 'y' || ch == 'Y');
-
-// 	fout.close();
-// }
-
-// void read_Books() {
-// 	Books bk("hey", "hii", 1, 2, 3, 4);
-
-// 	ifstream b("books.txt");
-// 	while (b.read((char*)&bk, sizeof(bk))) {
-// 	bk.printBookDetails();
-// 		b.read((char*)&bk, sizeof(bk));
-// 	}
-// 	b.close();
-// }
-
-// ofstream sf("student.txt");
-// void addStudents() {
-// 	Student stud;
-
-// 	while (read((char*)&stud),) {
-
-// 	}
-// }
-
 
 int locatnInDb(char bname[]){			//binary search the database of the book
 	ifstream fin("data.txt",ios::in);
 	int totalBooks;
 	fin >> totalBooks;
-	int beg = sizeof(int);
+	if(!totalBooks)return -1;
+	int dig = 0;
+	int num = totalBooks;
+
+	while(num)
+	{
+		++ dig;
+		num /= 10;
+	}
+	int beg = dig;
 	int end = beg;
 	end += max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
 	int mid;
@@ -145,7 +78,7 @@ int locatnInDb(char bname[]){			//binary search the database of the book
 		}
 		mid = (beg + end) / 2;
 		mid -= (mid % sizeof(Books));
-		fin.seekg(mid + sizeof(int), fin.beg);
+		fin.seekg(mid + dig, fin.beg);
 		Books book;
 		fin.read((char*)&book, sizeof(book));
 		char name[50];
@@ -155,7 +88,7 @@ int locatnInDb(char bname[]){			//binary search the database of the book
 		else if(cmp == 0)break;
 		else beg = mid + sizeof(Books);
 	}
-
+	fin.close();
 	return mid;
 }
 
@@ -164,13 +97,74 @@ void AddBook(){
 	char bname[50];
 	cin.getline(bname, 50);
 	int positn = locatnInDb(bname);
+	ifstream fin("data.txt", ios::in);
+	ofstream fout("newdata.txt", ios::out);
+	int totalBooks;
+	fin >> totalBooks;
+	int dig = 0;
+	int num = totalBooks;
 	
-	if(positn != -1){
-
-	}else{
-
+	while(num)
+	{
+		++ dig;
+		num /= 10;
 	}
-	
+	Books book;
+
+	if (positn == -1)
+	{
+		cout << "Enter name of the author: ";
+		char auth[50];
+		cin.getline(auth, 50);
+		cout << "Enter price of the book: ";
+		int bp;
+		cin >> bp;
+		cout << "Enter number of copies of the book: ";
+		int copies;
+		cin >> copies;
+		Books newBook(bname, auth, bp, copies);
+		++totalBooks;		
+		fout << totalBooks;
+		bool printd = false;
+
+		while(fin.read((char*)&book, sizeof(book)))
+		{
+			char name[50];
+			book.nameOfBook(name);
+			if (strcmp(name, bname) < 0 or printd)fout.write((char*)&book, sizeof(Books));
+			else
+			{
+				fout.write((char*)&newBook, sizeof(Books));
+				fout.write((char*)&book ,sizeof(Books));
+				printd = true;
+			}
+		}
+		if (!printd)fout.write((char*)&newBook, sizeof(Books));
+	}
+
+	else
+	{
+		fout << totalBooks;
+		cout << "Enter number of copies: ";
+		int copies;
+		cin >> copies;
+		
+		while(fin.read((char*)&book, sizeof(book)))
+		{
+			char name[50];
+			book.nameOfBook(name);
+			if (strcmp(name, bname))fout.write((char*)&book, sizeof(Books));
+			else
+			{
+				book.addCopies(copies);
+				fout.write((char*)&book, sizeof(Books));
+			}
+		}	
+	}
+	fin.close();
+	fout.close();
+	remove("data.txt");
+	rename("newdata.txt", "data.txt");
 }
 
 int main() {
