@@ -52,7 +52,7 @@ public:
 };
 
 int main(){
-	ofstream fout("data.txt", ios::out);
+	ofstream fout("data.txt");
 	Books b;
 	int tot = 0;
 	fout << tot;

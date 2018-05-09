@@ -31,20 +31,6 @@ public:
 	{
 		NoOfBooks += a;
 	}
-	// getBooksDetails() {
-	// 	cout << "Enter name of the book: ";
-	// 	cin.ignore();
-	// 	cin.getline(bookname, 50);
-
-	// 	cout << "Enter author name: ";
-	// 	cin.ignore();
-	// 	cin.getline(author, 50);
-
-	// 	cout << "Enter the price of the Book: ";
-	// 	cin >> bookprice;
-	// 	cout << "Enter the no of copies of books: ";
-	// 	cin >> NoOfBooks;
-	// }
 	printBookDetails() {
 		cout << "Name of the Book: " << bookname << endl;
 		cout << "Author of the Book: " << author << endl;	
@@ -66,9 +52,8 @@ int locatnInDb(char bname[]){			//binary search the database of the book
 		++ dig;
 		num /= 10;
 	}
-	int beg = dig;
-	int end = beg;
-	end += max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
+	int beg = 0;
+	int end = max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
 	int mid;
 
 	while(true){
@@ -89,7 +74,8 @@ int locatnInDb(char bname[]){			//binary search the database of the book
 		else beg = mid + sizeof(Books);
 	}
 	fin.close();
-	return mid;
+	if(mid == -1)return -1;
+	else return mid + dig;
 }
 
 void AddBook(){
@@ -101,14 +87,6 @@ void AddBook(){
 	ofstream fout("newdata.txt", ios::out);
 	int totalBooks;
 	fin >> totalBooks;
-	int dig = 0;
-	int num = totalBooks;
-	
-	while(num)
-	{
-		++ dig;
-		num /= 10;
-	}
 	Books book;
 
 	if (positn == -1)
@@ -167,8 +145,42 @@ void AddBook(){
 	rename("newdata.txt", "data.txt");
 }
 
+void viewDatabase()
+{
+	ifstream fin("data.txt");
+	int totalBooks;
+	fin >> totalBooks;
+	cout << "Total number of books: " << totalBooks << endl;
+	Books book;
+	while(fin.read((char*)&book, sizeof(book)))
+	{
+		book.printBookDetails();
+		cout << endl;
+	}
+	fin.close();
+}
+
+void searchBook()
+{
+	cout << "Enter name of the book: ";
+	char bname[50];
+	cin.getline(bname, 50);
+	int positn = locatnInDb(bname);
+	
+	if (positn != -1)
+	{
+		ifstream fin("data.txt");
+		fin.seekg(positn, fin.beg);
+		Books book;
+		fin.read((char*)&book, sizeof(Books));
+		book.printBookDetails();
+		fin.close();
+	}
+	else cout << "The following book does not exists!!" << endl;
+}
+
 int main() {
-	cout << "(1) Add a book\n(2)Delete a book\n(3)Issue a book\n(4)Return a book\n(5)Exit" << endl;
+	cout << "(1)Add a book\n(2)View database of books\n(3)Search a book\n(6)Exit" << endl;
 	char c;
 
 	do{
@@ -177,15 +189,12 @@ int main() {
 		switch(c){
 			case '1': AddBook();
 			break;
-			// case '2': DeleteBook();
-			// break;
-			// case '3': IssueBook();
-			// break;
-			// case '4': ReturnBook();
-			// break;
+			case '2': viewDatabase();
+			break;
+			case '3': searchBook();
 			default:;
 		};
-	} while (c != '5');
+	} while (c != '6');
 
 	return 0;
 }
