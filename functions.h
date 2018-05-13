@@ -3,6 +3,19 @@
 #include <D:\Git\Library-Management-System\class.h>
 using namespace std;
 
+int dgtsIn(int x)
+{
+	int dig = 1;
+	x /= 10;
+	
+	while(x)
+	{
+		dig++;
+		x /= 10;
+	}
+	return dig;
+}
+
 long long int locatnInDb(char bname[]){			//binary search the database of the book
 	ifstream fin("data.txt",ios::in);
 	int totalBooks;
@@ -17,9 +30,9 @@ long long int locatnInDb(char bname[]){			//binary search the database of the bo
 		num /= 10;
 	}
 
-	int beg = 0;
-	int end = max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
-	int mid;
+	long long int beg = 0;
+	long long int end = max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
+	long long int mid;
 
 	while(true){
 		if(beg > end){
@@ -67,7 +80,7 @@ void AddBook(){
 		cout << "Enter number of copies of the book: ";
 		int copies;
 		cin >> copies;
-		Books newBook(bname, auth, bp, copies);
+		Books newBook(bname, auth, bp, copies, 0);
 		++totalBooks;		
 		fout << totalBooks;
 		bool printd = false;
@@ -146,6 +159,80 @@ void searchBook()
 	else cout << "The following book does not exists!!" << endl;
 }
 
+void createstdntDatabs()
+{
+	ifstream fin("studentdata.txt");
+	ofstream fout("students.txt");
+	int totl;
+	fin >> totl;
+	
+	fout << totl;
+	while(totl --)
+	{
+		int rollNo;
+		fin >> rollNo;
+		int nob;
+		fin >> nob;
+		int fine;
+		fin >> fine;
+		Student s1(rollNo, nob, fine);
+		
+		for (int i = 0; i < nob; ++i)
+		{
+			char bname[50];
+			fin >> bname;
+			long long int day;
+			fin >> day;
+			int time;
+			fin >> time;
+			struct IshDetails d1(bname, day, time);
+			s1.addDetails(&d1, i);
+		}
+
+		fout.write((char*)&s1, sizeof(Student));
+	}
+	fin.close();
+	fout.close();
+}	
+
+void createBkDatabs()
+{
+	ifstream fin("bookdata.txt");
+	ofstream fout("data.txt", ios::trunc);
+	int tot;
+	fin >> tot;
+	fout << tot;
+	
+	while(tot --)
+	{
+		char bname[50], auth[50];
+		fin >> bname >> auth;
+		int bp, nob, noib;
+		fin >> bp >> nob >> noib;
+		Books book(bname, auth, bp, nob, noib);
+		fout.write((char*)&book, sizeof(Books));
+	}
+
+	fin.close();
+	fout.close();
+}
+
+void viewDatabasestd()
+{
+	ifstream fin("students.txt");
+	int totl;
+	fin >> totl;
+	int dig = dgtsIn(totl);
+	fin.seekg(dig, fin.beg);
+	Student s;
+	cout << "Total number of students: " << totl << endl;
+	while(fin.read((char*)&s, sizeof(Student)))
+	{
+		s.printDetails();
+		cout << endl;
+	}
+	fin.close();
+}
 // void issueBook()
 // {
 //    cout << "Enter the name of the book: ";
@@ -161,6 +248,7 @@ void searchBook()
 
 //    Books book;
 //    ifstream fin("data.txt");
+//    fin.seekg(positn, fin.beg());
 //    fin.read((char*)&book, sizeof(book));
    
 //    if(!book.ifLeft())
@@ -172,5 +260,38 @@ void searchBook()
 //    long long int rollNO;
 //    cout << "Enter the roll number of the student: ";
 //    cin >> rollNO;
-//    book.issue(rollNO);
+//    fin.close();
+//    issueBook(rollNO, bname);
+// }
+
+// void issueBook(long long int rollNO, char bname[])
+// {
+// 	ifstream fin("data.txt");
+// 	ofstream fout("newdata.txt");
+// 	Books book;
+// 	int totalBooks;
+// 	fin >> totalBooks;
+// 	fout << totalBooks;
+// 	int dig = 0;
+// 	int num = totalBooks;
+
+// 	while(num)
+// 	{
+// 		++ dig;
+// 		num /= 10;
+// 	}
+// 	fin.seekg(dig, fin.beg);
+
+// 	while(fin.read((char*)&book, sizeof(Books)))
+// 	{
+// 		char name[50];
+// 		book.nameOfBook(name);
+// 		if(strcmp(name, bname) != 0)fout.write((char*)&book, sizeof(Books));
+// 		else{
+// 			book.issue();
+// 			fout.write((char*)&book, sizeof(Books));
+// 		}
+// 	}
+
+// 	//to be continued
 // }

@@ -3,6 +3,7 @@
 #include <cstring>
 #include <vector>
 #include <utility>
+#include <fstream>
 using namespace std;
 
 #ifndef BOOK_LIMIT
@@ -19,7 +20,7 @@ private:
 	int NoOfLeftBooks;
 
 public:
-	Books(char bname[], char auth[], int bp, int nob){
+	Books(char bname[], char auth[], int bp, int nob, int noib){
 		strcpy(bookname, bname);
 		strcpy(author, auth);
 		NoOfBooks = nob;
@@ -36,11 +37,18 @@ public:
 	void addCopies(int a)
 	{
 		NoOfBooks += a;
+		NoOfLeftBooks += a;
 	}
 
 	bool ifLeft()
 	{
 		return NoOfLeftBooks;
+	}
+
+	void issue()
+	{
+		NoOfLeftBooks--;
+		NoOfIssuedBooks ++;
 	}
 
 	printBookDetails() {
@@ -60,9 +68,18 @@ public:
 
 struct IshDetails
 {
-	int date;
+	long long int date;
 	int time;
 	char bookname[50];	
+
+	IshDetails(char bname[], long long int day, int t)
+	{
+		strcpy(bookname, bname);
+		date = day;
+		time = t;
+	};
+
+	IshDetails(){}
 };
 
 class Student
@@ -73,7 +90,33 @@ private:
 	int fine;
 	struct IshDetails details[BOOK_LIMIT];
 public:
-	Student();
-	~Student();
-	
+	Student(int rn, int nob, int fn)
+	{
+		rollNo = rn;
+		booksIssued = nob;
+		fine = fn;
+		struct IshDetails s;
+		details[0] = s;
+	}
+
+	Student(){}
+
+	void addDetails(struct IshDetails* s, int i)
+	{
+		details[i] = *s;
+	}
+
+	void printDetails()
+	{
+		cout << "Student Roll number: " << rollNo <<endl;
+		cout << "Fine on Student: " <<fine << endl;
+		cout << "Books issued on Student: "<< endl;
+		for (int i = 0; i < booksIssued; ++i)
+		{
+			cout << details[i].bookname << '\t' << details[i].date / 1000000 << "-" << (details[i].date % 1000000) / 10000 << "-" << details[i].date % 10000;
+			cout << '\t' << details[i].time / 100 << ":" << details[i].time % 100 << endl;
+
+		}
+	}
 };
+
