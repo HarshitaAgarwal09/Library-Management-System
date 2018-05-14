@@ -16,21 +16,19 @@ private:
 	char author[50];
 	int bookprice;
 	int NoOfBooks;
-	int NoOfIssuedBooks;
 	int NoOfLeftBooks;
 
 public:
-	Books(char bname[], char auth[], int bp, int nob, int noib){
+	Books(char bname[], char auth[], int bp, int nob, int nolb){
 		strcpy(bookname, bname);
 		strcpy(author, auth);
 		NoOfBooks = nob;
-		NoOfLeftBooks = nob;
-		NoOfIssuedBooks = 0;
+		NoOfLeftBooks = nolb;
 		bookprice = bp;
 	}
 
 	Books(){}
-	void nameOfBook(char name[]){
+	void name(char name[]){
 		strcpy(name, bookname);
 	}
 
@@ -45,24 +43,21 @@ public:
 		return NoOfLeftBooks;
 	}
 
-	void issue()
-	{
-		NoOfLeftBooks--;
-		NoOfIssuedBooks ++;
-	}
-
-	printBookDetails() {
+	printDetails() {
 		cout << "Name of the Book: " << bookname << endl;
 		cout << "Author of the Book: " << author << endl;	
 		cout << "Price of the Book: " << bookprice << endl;
-		cout << "Number of copies of Books: " << NoOfBooks << endl;
+		cout << "Total number of copies of Book: " << NoOfBooks << endl;
+		cout << "Number of copies available: " << NoOfLeftBooks << endl;
+		cout << endl;
 	}
 
-	printBookDetails(int x)
-	{
+	printDetails(int x) {
 		cout << "Author of the Book: " << author << endl;	
 		cout << "Price of the Book: " << bookprice << endl;
-		cout << "Number of copies of Books: " << NoOfBooks << endl;	
+		cout << "Total number of copies of Book: " << NoOfBooks << endl;
+		cout << "Number of copies available: " << NoOfLeftBooks << endl;
+		cout << endl;
 	}
 };
 

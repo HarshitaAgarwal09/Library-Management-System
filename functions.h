@@ -3,6 +3,17 @@
 #include <D:\Git\Library-Management-System\class.h>
 using namespace std;
 
+/*
+dgtsIn()			line: 17
+locatn()		line: 30
+AddBook()			line: 72
+viewDatabase()		line: 141
+searchBook()		line: 156
+createstdntDatabs()	line: 175
+createBkDatabs()	line: 211
+viewDatabasestd()	line: 233
+*/
+
 int dgtsIn(int x)
 {
 	int dig = 1;
@@ -16,20 +27,13 @@ int dgtsIn(int x)
 	return dig;
 }
 
-long long int locatnInDb(char bname[]){			//binary search the database of the book
+long long int locatn(char bname[]){			//binary search the database of the book
 	ifstream fin("data.txt",ios::in);
 	int totalBooks;
 	fin >> totalBooks;
 	if(!totalBooks)return -1;
-	int dig = 0;
-	int num = totalBooks;
-
-	while(num)
-	{
-		++ dig;
-		num /= 10;
-	}
-
+	int dig = dgtsIn(totalBooks);
+	
 	long long int beg = 0;
 	long long int end = max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
 	long long int mid;
@@ -46,8 +50,9 @@ long long int locatnInDb(char bname[]){			//binary search the database of the bo
 		Books book;
 		fin.read((char*)&book, sizeof(book));
 		char name[50];
-		book.nameOfBook(name);
+		book.name(name);
 		int cmp = strcmp(bname, name);
+		
 		if(cmp < 0)end = mid - sizeof(Books);
 		else if(cmp == 0)break;
 		else beg = mid + sizeof(Books);
@@ -58,11 +63,12 @@ long long int locatnInDb(char bname[]){			//binary search the database of the bo
 	else return mid + dig;
 }
 
-void AddBook(){
+void AddBook()
+{
 	cout << "Enter name of the Book : ";
 	char bname[50];
-	cin.getline(bname, 50);
-	long long int positn = locatnInDb(bname);
+	cin >> bname;
+	long long int positn = locatn(bname);
 	ifstream fin("data.txt", ios::in);
 	ofstream fout("newdata.txt", ios::out);
 	int totalBooks;
@@ -73,14 +79,14 @@ void AddBook(){
 	{
 		cout << "Enter name of the author: ";
 		char auth[50];
-		cin.getline(auth, 50);
+		cin >> auth;
 		cout << "Enter price of the book: ";
 		int bp;
 		cin >> bp;
 		cout << "Enter number of copies of the book: ";
 		int copies;
 		cin >> copies;
-		Books newBook(bname, auth, bp, copies, 0);
+		Books newBook(bname, auth, bp, copies, copies);
 		++totalBooks;		
 		fout << totalBooks;
 		bool printd = false;
@@ -88,7 +94,8 @@ void AddBook(){
 		while(fin.read((char*)&book, sizeof(book)))
 		{
 			char name[50];
-			book.nameOfBook(name);
+			book.name(name);
+			
 			if (strcmp(name, bname) < 0 or printd)fout.write((char*)&book, sizeof(Books));
 			else
 			{
@@ -97,6 +104,7 @@ void AddBook(){
 				printd = true;
 			}
 		}
+		
 		if (!printd)fout.write((char*)&newBook, sizeof(Books));
 	}
 
@@ -110,7 +118,7 @@ void AddBook(){
 		while(fin.read((char*)&book, sizeof(book)))
 		{
 			char name[50];
-			book.nameOfBook(name);
+			book.name(name);
 			if (strcmp(name, bname))fout.write((char*)&book, sizeof(Books));
 			else
 			{
@@ -125,17 +133,16 @@ void AddBook(){
 	rename("newdata.txt", "data.txt");
 }
 
-void viewDatabase()
+void viewBooks()
 {
 	ifstream fin("data.txt");
 	int totalBooks;
 	fin >> totalBooks;
-	cout << "Total number of books: " << totalBooks << endl;
+	cout << endl << "Total number of books: " << totalBooks << endl << endl;
 	Books book;
 	while(fin.read((char*)&book, sizeof(book)))
 	{
-		book.printBookDetails();
-		cout << endl;
+		book.printDetails();
 	}
 	fin.close();
 }
@@ -144,8 +151,8 @@ void searchBook()
 {
 	cout << "Enter name of the book: ";
 	char bname[50];
-	cin.getline(bname, 50);
-	long long int positn = locatnInDb(bname);
+	cin >> bname;
+	long long int positn = locatn(bname);
 	
 	if (positn != -1)
 	{
@@ -153,10 +160,10 @@ void searchBook()
 		fin.seekg(positn, fin.beg);
 		Books book;
 		fin.read((char*)&book, sizeof(Books));
-		book.printBookDetails(1);
+		book.printDetails(0);
 		fin.close();
 	}
-	else cout << "The following book does not exists!!" << endl;
+	else cout << "We don't have this book !!" << endl;
 }
 
 void createstdntDatabs()
@@ -195,7 +202,7 @@ void createstdntDatabs()
 	fout.close();
 }	
 
-void createBkDatabs()
+void uploadBooks()
 {
 	ifstream fin("bookdata.txt");
 	ofstream fout("data.txt", ios::trunc);
@@ -207,9 +214,9 @@ void createBkDatabs()
 	{
 		char bname[50], auth[50];
 		fin >> bname >> auth;
-		int bp, nob, noib;
-		fin >> bp >> nob >> noib;
-		Books book(bname, auth, bp, nob, noib);
+		int bp, nob, nolb;
+		fin >> bp >> nob >> nolb;
+		Books book(bname, auth, bp, nob, nolb);
 		fout.write((char*)&book, sizeof(Books));
 	}
 
@@ -217,7 +224,7 @@ void createBkDatabs()
 	fout.close();
 }
 
-void viewDatabasestd()
+void viewStudents()
 {
 	ifstream fin("students.txt");
 	int totl;
@@ -225,7 +232,7 @@ void viewDatabasestd()
 	int dig = dgtsIn(totl);
 	fin.seekg(dig, fin.beg);
 	Student s;
-	cout << "Total number of students: " << totl << endl;
+	cout << endl << "Total number of students: " << totl << endl << endl;
 	while(fin.read((char*)&s, sizeof(Student)))
 	{
 		s.printDetails();
@@ -233,65 +240,3 @@ void viewDatabasestd()
 	}
 	fin.close();
 }
-// void issueBook()
-// {
-//    cout << "Enter the name of the book: ";
-//    char bname[50];
-//    cin.getline(bname, 50);
-//    long long int positn = locatnInDb(bname);
-   
-//    if(positn == -1)
-//    {
-//       cout << "Sorry! we don't have this book" << endl;
-//       return;
-//    }
-
-//    Books book;
-//    ifstream fin("data.txt");
-//    fin.seekg(positn, fin.beg());
-//    fin.read((char*)&book, sizeof(book));
-   
-//    if(!book.ifLeft())
-//    {
-//       cout << "Sorry! we are out of stock for this book" << endl;
-//       return;
-//    }
-
-//    long long int rollNO;
-//    cout << "Enter the roll number of the student: ";
-//    cin >> rollNO;
-//    fin.close();
-//    issueBook(rollNO, bname);
-// }
-
-// void issueBook(long long int rollNO, char bname[])
-// {
-// 	ifstream fin("data.txt");
-// 	ofstream fout("newdata.txt");
-// 	Books book;
-// 	int totalBooks;
-// 	fin >> totalBooks;
-// 	fout << totalBooks;
-// 	int dig = 0;
-// 	int num = totalBooks;
-
-// 	while(num)
-// 	{
-// 		++ dig;
-// 		num /= 10;
-// 	}
-// 	fin.seekg(dig, fin.beg);
-
-// 	while(fin.read((char*)&book, sizeof(Books)))
-// 	{
-// 		char name[50];
-// 		book.nameOfBook(name);
-// 		if(strcmp(name, bname) != 0)fout.write((char*)&book, sizeof(Books));
-// 		else{
-// 			book.issue();
-// 			fout.write((char*)&book, sizeof(Books));
-// 		}
-// 	}
-
-// 	//to be continued
-// }
