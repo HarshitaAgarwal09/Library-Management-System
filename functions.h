@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <D:\Git\Library-Management-System\class.h>
 using namespace std;
 
@@ -202,26 +203,153 @@ void createstdntDatabs()
 	fout.close();
 }	
 
-void uploadBooks()
+
+struct srting
 {
-	ifstream fin("bookdata.txt");
-	ofstream fout("data.txt", ios::trunc);
-	int tot;
-	fin >> tot;
-	fout << tot;
-	
-	while(tot --)
+	int num;
+	char bname[50];
+	srting(int x, char name[])
 	{
-		char bname[50], auth[50];
-		fin >> bname >> auth;
-		int bp, nob, nolb;
-		fin >> bp >> nob >> nolb;
-		Books book(bname, auth, bp, nob, nolb);
-		fout.write((char*)&book, sizeof(Books));
+		num = x;
+		strcpy(bname, name);
+	}
+};
+
+int partition(std::vector<struct srting>* dummy, int beg, int end)
+{
+	char endName[50];
+	strcpy(endName, (*dummy)[end - 1].bname);
+	int pivot = beg - 1;
+
+	for (int i = beg; i < end; ++i) if(strcmp((*dummy)[i].bname, endName) <= 0)
+	{
+		swap((*dummy)[i], (*dummy)[pivot + 1]);
+		++ pivot;
 	}
 
-	fin.close();
+	return pivot;
+}
+
+void quickSrt(std::vector<struct srting>* dummy, int beg, int end)
+{
+	if(beg >= end)return;
+	int pivot = partition(dummy, beg, end);
+	quickSrt(dummy, beg, pivot);
+	quickSrt(dummy, pivot + 1, end);
+}
+
+
+void uploadBooks()
+{
+	ifstream finNew("bookdata.txt");
+	ofstream fout("newdata.txt");
+	int totlNew;
+	finNew >> totlNew;
+	fout << totlNew;
+	int dig = dgtsIn(totlNew);
+	std::vector<struct srting> dummy;
+	int num = -1;
+
+ 	
+	for (int i = 0; i < totlNew; ++i)
+	{
+		char bname[50];
+		finNew >> bname;
+		char auth[50];
+		finNew >> auth;
+		int price, tot, left;
+		finNew >> price >> tot >> left;
+		Books b(bname, auth, price, tot, left);
+		fout.write((char*)&b, sizeof(Books));
+		++ num;
+		struct srting s(num, bname);
+		dummy.push_back(s);
+	}
+	finNew.close();
 	fout.close();
+	finNew.open("newdata.txt");
+	quickSrt(&dummy, 0, num + 1);
+	ofstream foutTemp("srtd.txt");
+	foutTemp << totlNew;	
+
+	for (int i = 0; i < num + 1; ++i)
+	{
+		finNew.seekg(dig + dummy[i].num * sizeof(Books), finNew.beg);
+		Books book;
+		finNew.read((char *)&book, sizeof(Books));
+		foutTemp.write((char *)&book, sizeof(Books));
+	}
+
+	finNew.close();
+	foutTemp.close();
+	remove("newdata.txt");
+
+	ifstream fin;
+	fin.open("srtd.txt");
+	ifstream finOld;
+	finOld.open("data.txt");
+	Books book2;
+
+	if(finOld.read((char *)&book2, sizeof(book2)))
+	{
+		finOld.seekg(0, finOld.beg);
+		ofstream fout("newdata.txt");
+		int newTot;
+		fin >> newTot;
+		int oldTot;
+		finOld >> oldTot;
+		int digN = dgtsIn(newTot);
+		int digO = dgtsIn(oldTot);
+		fout << newTot + oldTot;
+		fin.seekg(digN, fin.beg);
+		finOld.seekg(digO, finOld.beg);
+		Books book1, book2;
+		bool prsntNew = true;
+		fin.read((char *)&book1, sizeof(book1));
+		bool prsntOld = true;
+		finOld.read((char *)&book2, sizeof(book2));
+
+		while(true){
+			if (prsntNew and prsntOld){
+				char name1[50], name2[50];
+				book1.name(name1);
+				book2.name(name2);
+				
+				if (strcmp(name1, name2) < 0) {
+					fout.write((char *)&book1, sizeof(book1));
+					if(!fin.read((char *)&book1, sizeof(book1)))prsntNew = false;				
+				}
+				else
+				{
+					fout.write((char *)&book2, sizeof(book2));
+					if(!finOld.read((char *)&book2, sizeof(book2)))prsntOld = false;
+				}
+			}
+			else if(prsntNew){
+				fout.write((char *)&book1, sizeof(book1));
+				if(!fin.read((char *)&book1, sizeof(book1)))prsntNew = false;
+			}
+			else if(prsntOld){
+				fout.write((char *)&book2, sizeof(book2));
+				if(!finOld.read((char *)&book2, sizeof(book2))) prsntOld = false;
+			}
+			else break;
+		}
+
+		fin.close();
+		finOld.close();
+		fout.close();
+		remove("data.txt");
+		remove("srtd.txt");
+		rename("newdata.txt", "data.txt");		
+		
+	}
+	else
+	{
+		fin.close();
+		rename("srtd.txt", "data.txt");
+	}
+	
 }
 
 void viewStudents()

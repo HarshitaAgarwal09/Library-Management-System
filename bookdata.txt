@@ -1,10 +1,7 @@
-3
-diary_of_a_young_girl
-anne_frank
-120	12	12
+2
 let_us_c
 yashwant_kanetkar
-100	10	10
+100 4 4
 story_of_my_life
 helen_keller
-130	13	13
+130 5 5
