@@ -313,7 +313,19 @@ void uploadBook()
 	ifstream finNew("bookdata.txt");
 	ofstream fout("newdata.txt");
 	int totlNew;
-	finNew >> totlNew;
+	char c;
+	
+	if (finNew.read((char*)&c, sizeof(char))) {
+		finNew.seekg(0, finNew.beg);
+		finNew >> totlNew;
+	}
+	else
+	{
+		cout << endl << "No books to upload" << endl;
+		return;
+	}
+	
+	
 	fout << totlNew;
 	int dig = dgtsIn(totlNew);
 	std::vector<struct srting> dummy;
@@ -347,7 +359,7 @@ void uploadBook()
 		finNew.read((char *)&book, sizeof(Book));
 		foutTemp.write((char *)&book, sizeof(Book));
 	}
-
+	//created srtd.txt from bookdata.txt
 	finNew.close();
 	foutTemp.close();
 	remove("newdata.txt");
@@ -376,6 +388,7 @@ void uploadBook()
 		fin.read((char *)&book1, sizeof(book1));
 		bool prsntOld = true;
 		finOld.read((char *)&book2, sizeof(book2));
+		int dcrmnt = 0;
 
 		while(true){
 			if (prsntNew and prsntOld){
@@ -387,11 +400,20 @@ void uploadBook()
 					fout.write((char *)&book1, sizeof(book1));
 					if(!fin.read((char *)&book1, sizeof(book1)))prsntNew = false;				
 				}
-				else
+				else if(strcmp(name1, name2) > 0)
 				{
 					fout.write((char *)&book2, sizeof(book2));
 					if(!finOld.read((char *)&book2, sizeof(book2)))prsntOld = false;
 				}
+				else
+				{
+					book2.mergeBooks(book1.copies(), book1.left());
+					dcrmnt ++;
+					fout.write((char*)&book2, sizeof(Book));
+					if(!fin.read((char *)&book1, sizeof(book1)))prsntNew = false;				
+					if(!finOld.read((char *)&book2, sizeof(book2)))prsntOld = false;
+				}
+				
 			}
 			else if(prsntNew){
 				fout.write((char *)&book1, sizeof(book1));
@@ -403,10 +425,25 @@ void uploadBook()
 			}
 			else break;
 		}
-
+	//merged bookdata.txt with books.txt in newdata.txt
 		fin.close();
 		finOld.close();
 		fout.close();
+		
+		if (dcrmnt) {
+			fin.open("newdata.txt");
+			fout.open("newdataDcr.txt");
+			fin >> totlNew;
+			fout << totlNew - dcrmnt;
+			
+			while(fin.read((char*)&book1, sizeof(Book))) fout.write((char*)&book1, sizeof(Book));
+			
+			fin.close();
+			fout.close();
+			remove("newdata.txt");
+			rename("newdataDcr.txt", "newdata.txt");
+		}
+		
 		remove("books.txt");
 		remove("srtd.txt");
 		rename("newdata.txt", "books.txt");		

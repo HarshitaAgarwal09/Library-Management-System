@@ -1,16 +1,4 @@
-5
+1
 _1001_inventions
 trevor_baylis
 500 2 2
-playing_with_graphs_in_physics
-ajay_pratap_singh
-120 3 2
-playing_with_graphs
-amit_m_agarwal
-120 3 1
-advanced_engineering_mathematics
-jain_iyenger
-500 4 1
-avr_microcontroller
-ali_mazidi
-350 5 5

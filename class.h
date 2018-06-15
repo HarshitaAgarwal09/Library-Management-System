@@ -36,6 +36,20 @@ public:
 		NoOfLeftCps += a;
 	}
 
+	int copies(){
+		return NoOfCopies;
+	}
+
+	void mergeBooks(int cps, int left)
+	{
+		NoOfCopies += cps;
+		NoOfLeftCps += left;
+	}
+
+	int left(){
+		return NoOfLeftCps;
+	}
+
 	bool ifLeft()
 	{
 		return NoOfLeftCps;
