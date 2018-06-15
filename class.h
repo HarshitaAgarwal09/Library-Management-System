@@ -1,62 +1,60 @@
+#ifndef CLASS
+#define CLASS
 #include <iostream>
-#include <array>
 #include <cstring>
 #include <vector>
-#include <utility>
 #include <fstream>
 using namespace std;
 
-#ifndef BOOK_LIMIT
 #define BOOK_LIMIT 3
-#endif
 
-class Books{
+class Book{
 private:
-	char bookname[50];
+	char Title[50];
 	char author[50];
-	int bookprice;
-	int NoOfBooks;
-	int NoOfLeftBooks;
+	int price;
+	int NoOfCopies;
+	int NoOfLeftCps;
 
 public:
-	Books(char bname[], char auth[], int bp, int nob, int nolb){
-		strcpy(bookname, bname);
+	Book(char bname[], char auth[], int bp, int nob, int nolb){
+		strcpy(Title, bname);
 		strcpy(author, auth);
-		NoOfBooks = nob;
-		NoOfLeftBooks = nolb;
-		bookprice = bp;
+		NoOfCopies = nob;
+		NoOfLeftCps = nolb;
+		price = bp;
 	}
 
-	Books(){}
+	Book(){}
 	void name(char name[]){
-		strcpy(name, bookname);
+		strcpy(name, Title);
 	}
 
 	void addCopies(int a)
 	{
-		NoOfBooks += a;
-		NoOfLeftBooks += a;
+		NoOfCopies += a;
+		NoOfLeftCps += a;
 	}
 
 	bool ifLeft()
 	{
-		return NoOfLeftBooks;
+		return NoOfLeftCps;
 	}
 
-	printDetails() {
-		cout << "Name of the Book: " << bookname << endl;
+	void printDetails() {
+		cout << "Name of the Book: " << Title << endl;
 		cout << "Author of the Book: " << author << endl;	
-		cout << "Price of the Book: " << bookprice << endl;
-		cout << "Total number of copies of Book: " << NoOfBooks << endl;
-		cout << "Number of copies available: " << NoOfLeftBooks << endl;
+		cout << "Price of the Book: " << price << endl;
+		cout << "Total number of copies of Book: " << NoOfCopies << endl;
+		cout << "Number of copies available: " << NoOfLeftCps << endl;
 		cout << endl;
 	}
 
-	printDetails(int x) {
+	void printDetails(int x) {
 		cout << "Author of the Book: " << author << endl;	
-		cout << "Price of the Book: " << bookprice << endl;
-		cout << "Total number of copies of Book: " << NoOfBooks << endl;
-		cout << "Number of copies available: " << NoOfLeftBooks << endl;
+		cout << "Price of the Book: " << price << endl;
+		cout << "Total number of copies of Book: " << NoOfCopies << endl;
+		cout << "Number of copies available: " << NoOfLeftCps << endl;
 		cout << endl;
 	}
 };
@@ -65,11 +63,11 @@ struct IshDetails
 {
 	long long int date;
 	int time;
-	char bookname[50];	
+	char Title[50];	
 
 	IshDetails(char bname[], long long int day, int t)
 	{
-		strcpy(bookname, bname);
+		strcpy(Title, bname);
 		date = day;
 		time = t;
 	};
@@ -81,14 +79,14 @@ class Student
 {
 private:
 	long long int rollNo;
-	int booksIssued;
+	int BookIssued;
 	int fine;
 	struct IshDetails details[BOOK_LIMIT];
 public:
 	Student(int rn, int nob, int fn)
 	{
 		rollNo = rn;
-		booksIssued = nob;
+		BookIssued = nob;
 		fine = fn;
 		struct IshDetails s;
 		details[0] = s;
@@ -105,13 +103,14 @@ public:
 	{
 		cout << "Student Roll number: " << rollNo <<endl;
 		cout << "Fine on Student: " <<fine << endl;
-		cout << "Books issued on Student: "<< endl;
-		for (int i = 0; i < booksIssued; ++i)
+		cout << "Book issued on Student: "<< endl;
+		for (int i = 0; i < BookIssued; ++i)
 		{
-			cout << details[i].bookname << '\t' << details[i].date / 1000000 << "-" << (details[i].date % 1000000) / 10000 << "-" << details[i].date % 10000;
+			cout << details[i].Title << '\t' << details[i].date / 1000000 << "-" << (details[i].date % 1000000) / 10000 << "-" << details[i].date % 10000;
 			cout << '\t' << details[i].time / 100 << ":" << details[i].time % 100 << endl;
 
 		}
 	}
 };
 
+#endif

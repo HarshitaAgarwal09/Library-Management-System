@@ -1,3 +1,5 @@
+#ifndef FUNCTIONS
+#define FUNCTIONS
 #include <fstream>
 #include <iostream>
 #include <string>
@@ -10,7 +12,7 @@ locatn()		line: 30
 AddBook()			line: 72
 viewDatabase()		line: 141
 searchBook()		line: 156
-createstdntDatabs()	line: 175
+uploadStdnts()	line: 175
 createBkDatabs()	line: 211
 viewDatabasestd()	line: 233
 */
@@ -30,13 +32,13 @@ int dgtsIn(int x)
 
 long long int locatn(char bname[]){			//binary search the database of the book
 	ifstream fin("data.txt",ios::in);
-	int totalBooks;
-	fin >> totalBooks;
-	if(!totalBooks)return -1;
-	int dig = dgtsIn(totalBooks);
+	int totalBook;
+	fin >> totalBook;
+	if(!totalBook)return -1;
+	int dig = dgtsIn(totalBook);
 	
 	long long int beg = 0;
-	long long int end = max((totalBooks - 1)* sizeof(Books), (long long unsigned int)0);
+	long long int end = max((totalBook - 1)* sizeof(Book), (long long unsigned int)0);
 	long long int mid;
 
 	while(true){
@@ -46,17 +48,17 @@ long long int locatn(char bname[]){			//binary search the database of the book
 		}
 
 		mid = (beg + end) / 2;
-		mid -= (mid % sizeof(Books));
+		mid -= (mid % sizeof(Book));
 		fin.seekg(mid + dig, fin.beg);
-		Books book;
+		Book book;
 		fin.read((char*)&book, sizeof(book));
 		char name[50];
 		book.name(name);
 		int cmp = strcmp(bname, name);
 		
-		if(cmp < 0)end = mid - sizeof(Books);
+		if(cmp < 0)end = mid - sizeof(Book);
 		else if(cmp == 0)break;
-		else beg = mid + sizeof(Books);
+		else beg = mid + sizeof(Book);
 	}
 
 	fin.close();
@@ -72,9 +74,9 @@ void AddBook()
 	long long int positn = locatn(bname);
 	ifstream fin("data.txt", ios::in);
 	ofstream fout("newdata.txt", ios::out);
-	int totalBooks;
-	fin >> totalBooks;
-	Books book;
+	int totalBook;
+	fin >> totalBook;
+	Book book;
 
 	if (positn == -1)
 	{
@@ -87,9 +89,9 @@ void AddBook()
 		cout << "Enter number of copies of the book: ";
 		int copies;
 		cin >> copies;
-		Books newBook(bname, auth, bp, copies, copies);
-		++totalBooks;		
-		fout << totalBooks;
+		Book newBook(bname, auth, bp, copies, copies);
+		++totalBook;		
+		fout << totalBook;
 		bool printd = false;
 
 		while(fin.read((char*)&book, sizeof(book)))
@@ -97,21 +99,21 @@ void AddBook()
 			char name[50];
 			book.name(name);
 			
-			if (strcmp(name, bname) < 0 or printd)fout.write((char*)&book, sizeof(Books));
+			if (strcmp(name, bname) < 0 or printd)fout.write((char*)&book, sizeof(Book));
 			else
 			{
-				fout.write((char*)&newBook, sizeof(Books));
-				fout.write((char*)&book ,sizeof(Books));
+				fout.write((char*)&newBook, sizeof(Book));
+				fout.write((char*)&book ,sizeof(Book));
 				printd = true;
 			}
 		}
 		
-		if (!printd)fout.write((char*)&newBook, sizeof(Books));
+		if (!printd)fout.write((char*)&newBook, sizeof(Book));
 	}
 
 	else
 	{
-		fout << totalBooks;
+		fout << totalBook;
 		cout << "Enter number of copies: ";
 		int copies;
 		cin >> copies;
@@ -120,11 +122,11 @@ void AddBook()
 		{
 			char name[50];
 			book.name(name);
-			if (strcmp(name, bname))fout.write((char*)&book, sizeof(Books));
+			if (strcmp(name, bname))fout.write((char*)&book, sizeof(Book));
 			else
 			{
 				book.addCopies(copies);
-				fout.write((char*)&book, sizeof(Books));
+				fout.write((char*)&book, sizeof(Book));
 			}
 		}	
 	}
@@ -134,13 +136,13 @@ void AddBook()
 	rename("newdata.txt", "data.txt");
 }
 
-void viewBooks()
+void viewBook()
 {
 	ifstream fin("data.txt");
-	int totalBooks;
-	fin >> totalBooks;
-	cout << endl << "Total number of books: " << totalBooks << endl << endl;
-	Books book;
+	int totalBook;
+	fin >> totalBook;
+	cout << endl << "Total number of Book: " << totalBook << endl << endl;
+	Book book;
 	while(fin.read((char*)&book, sizeof(book)))
 	{
 		book.printDetails();
@@ -159,15 +161,15 @@ void searchBook()
 	{
 		ifstream fin("data.txt");
 		fin.seekg(positn, fin.beg);
-		Books book;
-		fin.read((char*)&book, sizeof(Books));
+		Book book;
+		fin.read((char*)&book, sizeof(Book));
 		book.printDetails(0);
 		fin.close();
 	}
 	else cout << "We don't have this book !!" << endl;
 }
 
-void createstdntDatabs()
+void uploadStdnts()
 {
 	ifstream fin("studentdata.txt");
 	ofstream fout("students.txt");
@@ -239,7 +241,7 @@ void quickSrt(std::vector<struct srting>* dummy, int beg, int end)
 }
 
 
-void uploadBooks()
+void uploadBook()
 {
 	ifstream finNew("bookdata.txt");
 	ofstream fout("newdata.txt");
@@ -259,8 +261,8 @@ void uploadBooks()
 		finNew >> auth;
 		int price, tot, left;
 		finNew >> price >> tot >> left;
-		Books b(bname, auth, price, tot, left);
-		fout.write((char*)&b, sizeof(Books));
+		Book b(bname, auth, price, tot, left);
+		fout.write((char*)&b, sizeof(Book));
 		++ num;
 		struct srting s(num, bname);
 		dummy.push_back(s);
@@ -274,10 +276,10 @@ void uploadBooks()
 
 	for (int i = 0; i < num + 1; ++i)
 	{
-		finNew.seekg(dig + dummy[i].num * sizeof(Books), finNew.beg);
-		Books book;
-		finNew.read((char *)&book, sizeof(Books));
-		foutTemp.write((char *)&book, sizeof(Books));
+		finNew.seekg(dig + dummy[i].num * sizeof(Book), finNew.beg);
+		Book book;
+		finNew.read((char *)&book, sizeof(Book));
+		foutTemp.write((char *)&book, sizeof(Book));
 	}
 
 	finNew.close();
@@ -288,7 +290,7 @@ void uploadBooks()
 	fin.open("srtd.txt");
 	ifstream finOld;
 	finOld.open("data.txt");
-	Books book2;
+	Book book2;
 
 	if(finOld.read((char *)&book2, sizeof(book2)))
 	{
@@ -303,7 +305,7 @@ void uploadBooks()
 		fout << newTot + oldTot;
 		fin.seekg(digN, fin.beg);
 		finOld.seekg(digO, finOld.beg);
-		Books book1, book2;
+		Book book1, book2;
 		bool prsntNew = true;
 		fin.read((char *)&book1, sizeof(book1));
 		bool prsntOld = true;
@@ -356,6 +358,13 @@ void viewStudents()
 {
 	ifstream fin("students.txt");
 	int totl;
+	
+	if (!fin.read((char *)&totl, sizeof(int))){
+		cout << endl << "Total number of students: 0" << endl;
+		return;
+	}
+	fin.seekg(0, fin.beg);
+	
 	fin >> totl;
 	int dig = dgtsIn(totl);
 	fin.seekg(dig, fin.beg);
@@ -368,3 +377,4 @@ void viewStudents()
 	}
 	fin.close();
 }
+#endif

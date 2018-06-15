@@ -1,19 +1,19 @@
 (1)Add a book
-(2)View database of books
+(2)View database of Book
 (3)Search a book
 (4)Upload students
-(5)Upload books
+(5)Upload Book
 (6)View database of students
 (7)Exit
 Total number of students: 2
 Student Roll number: 1
 Fine on Student: 0
-Books issued on Student: 
+Book issued on Student: 
 diary_of_a_young_girl	13-5-2018	15:32
 
 Student Roll number: 2
 Fine on Student: 130
-Books issued on Student: 
+Book issued on Student: 
 story_of_my_life	13-5-2018	17:4
 let_us_c	13-5-2018	17:5
 
