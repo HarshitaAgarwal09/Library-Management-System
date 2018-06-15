@@ -172,11 +172,22 @@ void searchBook()
 void uploadStdnts()
 {
 	ifstream fin("studentdata.txt");
-	ofstream fout("students.txt");
+	char c;
 	int totl;
-	fin >> totl;
 	
+	if (fin.read((char*)&c, sizeof(char))) {
+		fin.seekg(0, fin.beg);		
+		fin >> totl;
+	}
+	else
+	{
+		cout << endl << "No data available to upload !!" << endl;
+		return;	
+	}
+
+	ofstream fout("studentsBin.txt");
 	fout << totl;
+
 	while(totl --)
 	{
 		int rollNo;
@@ -201,8 +212,64 @@ void uploadStdnts()
 
 		fout.write((char*)&s1, sizeof(Student));
 	}
+
 	fin.close();
 	fout.close();
+
+	fin.open("studentsBin.txt");
+	ifstream finOld("students.txt");
+	Student s1;
+	bool newEnd = false, oldEnd = true;
+	
+	if (finOld.read((char*)&s1, sizeof(Student))) {
+		oldEnd = false;
+		finOld.seekg(0, finOld.beg);
+	}
+	else
+	{
+		fin.close();
+		rename("studentsBin.txt", "students.txt");
+		return;
+	}
+
+	int newTotl, oldTotl;
+	fin >> newTotl;
+	finOld >> oldTotl;
+	fout.open("newStdnts.txt");
+	fout << newTotl + oldTotl;
+	Student s2;
+
+	if(!fin.read((char*)&s1, sizeof(Student))) newEnd = true;
+	if(!finOld.read((char*)&s2, sizeof(Student))) oldEnd = true;
+	
+	while(true){
+		if(!newEnd and !oldEnd){
+			if (s1.RollNo() < s2.RollNo()) {
+				fout.write((char*)&s1, sizeof(Student));
+				if(!fin.read((char*)&s1, sizeof(Student))) newEnd = true;
+			}
+			else
+			{
+				fout.write((char*)&s2, sizeof(Student));
+				if(!finOld.read((char*)&s2, sizeof(Student))) oldEnd = true;
+			}
+		}
+		else if(!newEnd){
+			fout.write((char*)&s1, sizeof(Student));
+			if(!fin.read((char*)&s1, sizeof(Student))) newEnd = true;
+		}
+		else if(!oldEnd){
+			fout.write((char*)&s2, sizeof(Student));
+			if(!finOld.read((char*)&s2, sizeof(Student))) oldEnd = true;
+		}
+		else break;
+	}
+fin.close();
+finOld.close();
+fout.close();
+remove("students.txt");
+remove("studentsBin.txt");
+rename("newStdnts.txt", "students.txt");	
 }	
 
 

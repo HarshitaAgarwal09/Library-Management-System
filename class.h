@@ -61,9 +61,9 @@ public:
 
 struct IshDetails
 {
-	long long int date;
-	int time;
-	char Title[50];	
+	long long int date = -1;
+	int time = -1;
+	char Title[50] = "\0";	
 
 	IshDetails(char bname[], long long int day, int t)
 	{
@@ -93,6 +93,11 @@ public:
 	}
 
 	Student(){}
+
+	long long int RollNo()
+	{
+		return rollNo;
+	}
 
 	void addDetails(struct IshDetails* s, int i)
 	{
