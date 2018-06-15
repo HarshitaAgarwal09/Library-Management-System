@@ -31,7 +31,7 @@ int dgtsIn(int x)
 }
 
 long long int locatn(char bname[]){			//binary search the database of the book
-	ifstream fin("data.txt",ios::in);
+	ifstream fin("books.txt",ios::in);
 	int totalBook;
 	fin >> totalBook;
 	if(!totalBook)return -1;
@@ -72,7 +72,7 @@ void AddBook()
 	char bname[50];
 	cin >> bname;
 	long long int positn = locatn(bname);
-	ifstream fin("data.txt", ios::in);
+	ifstream fin("books.txt", ios::in);
 	ofstream fout("newdata.txt", ios::out);
 	int totalBook;
 	fin >> totalBook;
@@ -132,13 +132,13 @@ void AddBook()
 	}
 	fin.close();
 	fout.close();
-	remove("data.txt");
-	rename("newdata.txt", "data.txt");
+	remove("books.txt");
+	rename("newdata.txt", "books.txt");
 }
 
 void viewBook()
 {
-	ifstream fin("data.txt");
+	ifstream fin("books.txt");
 	int totalBook;
 	fin >> totalBook;
 	cout << endl << "Total number of Book: " << totalBook << endl << endl;
@@ -159,7 +159,7 @@ void searchBook()
 	
 	if (positn != -1)
 	{
-		ifstream fin("data.txt");
+		ifstream fin("books.txt");
 		fin.seekg(positn, fin.beg);
 		Book book;
 		fin.read((char*)&book, sizeof(Book));
@@ -318,7 +318,6 @@ void uploadBook()
 	int dig = dgtsIn(totlNew);
 	std::vector<struct srting> dummy;
 	int num = -1;
-
  	
 	for (int i = 0; i < totlNew; ++i)
 	{
@@ -356,7 +355,7 @@ void uploadBook()
 	ifstream fin;
 	fin.open("srtd.txt");
 	ifstream finOld;
-	finOld.open("data.txt");
+	finOld.open("books.txt");
 	Book book2;
 
 	if(finOld.read((char *)&book2, sizeof(book2)))
@@ -408,15 +407,15 @@ void uploadBook()
 		fin.close();
 		finOld.close();
 		fout.close();
-		remove("data.txt");
+		remove("books.txt");
 		remove("srtd.txt");
-		rename("newdata.txt", "data.txt");		
+		rename("newdata.txt", "books.txt");		
 		
 	}
 	else
 	{
 		fin.close();
-		rename("srtd.txt", "data.txt");
+		rename("srtd.txt", "books.txt");
 	}
 	
 }
