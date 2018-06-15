@@ -17,7 +17,7 @@ createBkDatabs()	line: 211
 viewDatabasestd()	line: 233
 */
 
-int dgtsIn(int x)
+int dgtsIn(long long int x)
 {
 	int dig = 1;
 	x /= 10;
@@ -136,7 +136,7 @@ void AddBook()
 	rename("newdata.txt", "books.txt");
 }
 
-void viewBook()
+void viewBooks()
 {
 	ifstream fin("books.txt");
 	int totalBook;
@@ -425,7 +425,7 @@ void uploadBook()
 			}
 			else break;
 		}
-	//merged bookdata.txt with books.txt in newdata.txt
+		//merged bookdata.txt with books.txt in newdata.txt
 		fin.close();
 		finOld.close();
 		fout.close();
@@ -473,11 +473,57 @@ void viewStudents()
 	fin.seekg(dig, fin.beg);
 	Student s;
 	cout << endl << "Total number of students: " << totl << endl << endl;
+	
 	while(fin.read((char*)&s, sizeof(Student)))
 	{
 		s.printDetails();
 		cout << endl;
 	}
+	
 	fin.close();
 }
+
+void searchStudent()
+{
+	ifstream fin("students.txt");
+	long long int totlStudents;
+	fin >> totlStudents;
+	int digits = dgtsIn(totlStudents);
+	cout << "Enter Roll number: ";
+	long long int rollNo;
+	cin >> rollNo;
+	long long int begin = 0;
+	long long int end = max(digits + (totlStudents - 1) * sizeof(Student), (long long unsigned int)0 );
+	long long mid;
+	
+	while(true){
+		
+		if (begin > end) {
+			mid = -1;
+			break;
+		}
+		
+		mid = (begin + end) / 2;
+		mid -= mid % sizeof(Student);
+		fin.seekg(mid + digits, fin.beg);
+		Student s1;
+		fin.read((char*)&s1, sizeof(Student));
+		if (s1.RollNo() == rollNo) break;
+		else if(s1.RollNo() > rollNo) end = mid - sizeof(Student);
+		else begin = mid + sizeof(Student);
+	}
+	
+	if (mid == -1) {
+		cout << endl << " Roll number " << rollNo << " has no book issued." << endl;
+		return;
+	}
+	else
+	{
+		Student s1;
+		fin.seekg(mid + digits, fin.beg);
+		fin.read((char*)&s1, sizeof(Student));
+		s1.printDetails(0);
+	}
+}
+
 #endif

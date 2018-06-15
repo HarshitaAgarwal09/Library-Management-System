@@ -130,6 +130,18 @@ public:
 
 		}
 	}
+
+	void printDetails(int x)
+	{
+		cout << "Fine on Student: " <<fine << endl;
+		cout << "Book issued on Student: "<< endl;
+		for (int i = 0; i < BookIssued; ++i)
+		{
+			cout << details[i].Title << '\t' << details[i].date / 1000000 << "-" << (details[i].date % 1000000) / 10000 << "-" << details[i].date % 10000;
+			cout << '\t' << details[i].time / 100 << ":" << details[i].time % 100 << endl;
+
+		}
+	}
 };
 
 #endif
