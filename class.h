@@ -71,15 +71,19 @@ public:
 		cout << "Number of copies available: " << NoOfLeftCps << endl;
 		cout << endl;
 	}
+
+	void dcr(){
+		--NoOfLeftCps;
+	}
 };
 
 struct IshDetails
 {
-	long long int date = -1;
+	long int date = -1;
 	int time = -1;
 	char Title[50] = "\0";	
 
-	IshDetails(char bname[], long long int day, int t)
+	IshDetails(char bname[], long int day, int t)
 	{
 		strcpy(Title, bname);
 		date = day;
@@ -93,14 +97,14 @@ class Student
 {
 private:
 	long long int rollNo;
-	int BookIssued;
+	int booksIssued;
 	int fine;
 	struct IshDetails details[BOOK_LIMIT];
 public:
-	Student(int rn, int nob, int fn)
+	Student(long long int rn, int fn)
 	{
 		rollNo = rn;
-		BookIssued = nob;
+		booksIssued = 0;
 		fine = fn;
 		struct IshDetails s;
 		details[0] = s;
@@ -113,17 +117,32 @@ public:
 		return rollNo;
 	}
 
-	void addDetails(struct IshDetails* s, int i)
+	int totlIssued(){
+		return booksIssued;
+	}
+
+	bool ifIssued(char bname[]){
+		
+		for(int i = 0; i < booksIssued; i++)
+		{
+			if(strcmp(details[i].Title, bname) == 0) return true;
+		}
+
+		return false;
+	}
+
+	void addDetails(struct IshDetails* s)
 	{
-		details[i] = *s;
+		details[booksIssued] = *s;
+		++booksIssued;
 	}
 
 	void printDetails()
 	{
 		cout << "Student Roll number: " << rollNo <<endl;
 		cout << "Fine on Student: " <<fine << endl;
-		cout << "Book issued on Student: "<< endl;
-		for (int i = 0; i < BookIssued; ++i)
+		cout << "Book issued on Student: " << booksIssued << endl;
+		for (int i = 0; i < booksIssued; ++i)
 		{
 			cout << details[i].Title << '\t' << details[i].date / 1000000 << "-" << (details[i].date % 1000000) / 10000 << "-" << details[i].date % 10000;
 			cout << '\t' << details[i].time / 100 << ":" << details[i].time % 100 << endl;
@@ -134,8 +153,8 @@ public:
 	void printDetails(int x)
 	{
 		cout << "Fine on Student: " <<fine << endl;
-		cout << "Book issued on Student: "<< endl;
-		for (int i = 0; i < BookIssued; ++i)
+		cout << "Book issued on Student: "<< booksIssued << endl;
+		for (int i = 0; i < booksIssued; ++i)
 		{
 			cout << details[i].Title << '\t' << details[i].date / 1000000 << "-" << (details[i].date % 1000000) / 10000 << "-" << details[i].date % 10000;
 			cout << '\t' << details[i].time / 100 << ":" << details[i].time % 100 << endl;

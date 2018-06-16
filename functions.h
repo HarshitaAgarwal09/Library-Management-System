@@ -3,12 +3,13 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <ctime>
 #include <D:\Git\Library-Management-System\class.h>
 using namespace std;
 
 /*
 dgtsIn()			line: 17
-locatn()		line: 30
+bookbookLocatn()		line: 30
 AddBook()			line: 72
 viewDatabase()		line: 141
 searchBook()		line: 156
@@ -30,7 +31,7 @@ int dgtsIn(long long int x)
 	return dig;
 }
 
-long long int locatn(char bname[]){			//binary search the database of the book
+long long int bookLocatn(char bname[]){			//binary search the database of the book
 	ifstream fin("books.txt",ios::in);
 	int totalBook;
 	fin >> totalBook;
@@ -66,12 +67,49 @@ long long int locatn(char bname[]){			//binary search the database of the book
 	else return mid + dig;
 }
 
+long long int studentLocatn(long long int rollNo)
+{
+	ifstream fin("students.txt");
+	int totlStudents;
+	fin >> totlStudents;
+	
+	if (!totlStudents) return -1;
+	
+	int digits = dgtsIn(totlStudents);
+	long long int begin = 0;
+	long long int end = digits + (totlStudents - 1) * sizeof(Student);
+	long long int mid;
+	
+	while(true){
+		
+		if (begin > end) {
+			mid = -1;
+			break;
+		}
+		
+		mid = (begin + end) / 2;
+		mid -= mid % sizeof(Student);
+		fin.seekg(mid + digits, fin.beg);
+		Student s1;
+		fin.read((char*)&s1, sizeof(Student));
+		
+		if(s1.RollNo() == rollNo)break;
+		else if(s1.RollNo() > rollNo) end = mid - sizeof(Student);
+		else begin = mid + sizeof(Student);
+	}
+	
+	fin.close();
+	
+	if(mid == -1) return -1;
+	else return mid + digits;
+}
+
 void AddBook()
 {
 	cout << "Enter name of the Book : ";
 	char bname[50];
 	cin >> bname;
-	long long int positn = locatn(bname);
+	long long int positn = bookLocatn(bname);
 	ifstream fin("books.txt", ios::in);
 	ofstream fout("newdata.txt", ios::out);
 	int totalBook;
@@ -155,7 +193,7 @@ void searchBook()
 	cout << "Enter name of the book: ";
 	char bname[50];
 	cin >> bname;
-	long long int positn = locatn(bname);
+	long long int positn = bookLocatn(bname);
 	
 	if (positn != -1)
 	{
@@ -196,7 +234,7 @@ void uploadStdnts()
 		fin >> nob;
 		int fine;
 		fin >> fine;
-		Student s1(rollNo, nob, fine);
+		Student s1(rollNo, fine);
 		
 		for (int i = 0; i < nob; ++i)
 		{
@@ -207,7 +245,7 @@ void uploadStdnts()
 			int time;
 			fin >> time;
 			struct IshDetails d1(bname, day, time);
-			s1.addDetails(&d1, i);
+			s1.addDetails(&d1);
 		}
 
 		fout.write((char*)&s1, sizeof(Student));
@@ -228,6 +266,7 @@ void uploadStdnts()
 	else
 	{
 		fin.close();
+		finOld.close();
 		rename("studentsBin.txt", "students.txt");
 		return;
 	}
@@ -485,44 +524,155 @@ void viewStudents()
 
 void searchStudent()
 {
-	ifstream fin("students.txt");
-	long long int totlStudents;
-	fin >> totlStudents;
-	int digits = dgtsIn(totlStudents);
 	cout << "Enter Roll number: ";
 	long long int rollNo;
 	cin >> rollNo;
-	long long int begin = 0;
-	long long int end = max(digits + (totlStudents - 1) * sizeof(Student), (long long unsigned int)0 );
-	long long mid;
+	long long int positn = studentLocatn(rollNo);
 	
-	while(true){
-		
-		if (begin > end) {
-			mid = -1;
-			break;
-		}
-		
-		mid = (begin + end) / 2;
-		mid -= mid % sizeof(Student);
-		fin.seekg(mid + digits, fin.beg);
-		Student s1;
-		fin.read((char*)&s1, sizeof(Student));
-		if (s1.RollNo() == rollNo) break;
-		else if(s1.RollNo() > rollNo) end = mid - sizeof(Student);
-		else begin = mid + sizeof(Student);
-	}
-	
-	if (mid == -1) {
+	if (positn == -1) {
 		cout << endl << " Roll number " << rollNo << " has no book issued." << endl;
 		return;
 	}
 	else
 	{
+		ifstream fin("students.txt");
 		Student s1;
-		fin.seekg(mid + digits, fin.beg);
+		fin.seekg(positn, fin.beg);
 		fin.read((char*)&s1, sizeof(Student));
 		s1.printDetails(0);
+	}
+}
+
+void dcrmntCopies(char bname[])
+{
+	ifstream fin("books.txt");
+	int totalBooks;
+	fin >> totalBooks;
+	ofstream fout("newbooks.txt");
+	fout << totalBooks;
+	Book b1;
+
+	while(fin.read((char*)&b1, sizeof(Book))){
+		char readName[50];
+		b1.name(readName);
+		if(strcmp(readName, bname) != 0) fout.write((char*)&b1, sizeof(Book));
+		else{
+			b1.dcr();
+			fout.write((char*)&b1, sizeof(Book));
+		}
+	}
+	
+	fin.close();
+	fout.close();
+	remove("books.txt");
+	rename("newbooks.txt", "books.txt");
+}
+
+void issueBookNow(long long int rollNo, char bname[]){
+	long long int studentPositn = studentLocatn(rollNo);
+	
+	if (studentPositn == -1) {
+		Student s(rollNo, 0);
+		
+		time_t t = time(0);
+		tm* now = localtime(&t);
+		char buf[20];
+		strftime(buf, 20, "%Y-%m-%d.%X", now);
+		buf;
+
+		int time = (buf[15] - '0') + 10 * (buf[14] - '0') + 100 * (buf[12] - '0') + 1000 * (buf[11] - '0');
+		long int date = (buf[3] - '0') + 10 * (buf[2] - '0') + 100 * (buf[1] - '0') + 1000 * (buf[0] - '0') + 10000 * (buf[6] - '0') + 100000 * (buf[5] - '0') + 1000000 * (buf[9] - '0') + 10000000 * (buf[8] - '0');
+		struct IshDetails details(bname, date, time);
+		s.addDetails(&details);
+
+		ifstream fin("students.txt");
+		ofstream fout("newstudents.txt");
+		int totlStudents;
+		Student s1;
+
+		if (fin.read((char*)&s1, sizeof(Student))) {
+			fin.seekg(0, fin.beg);
+			fin >> totlStudents;
+		}
+		else totlStudents = 0;
+		
+		fout << totlStudents + 1;
+		bool ifprintd = false;
+		
+		for(long long int i = 0; i < totlStudents; i++)
+		{
+			fin.read((char*)&s1, sizeof(Student));
+			
+			if(s1.RollNo() < rollNo or ifprintd) fout.write((char*)&s1, sizeof(Student));
+			else{
+				ifprintd = true;
+				fout.write((char*)&s, sizeof(Student));
+				fout.write((char*)&s1, sizeof(Student));
+			}
+		}
+		
+		if (!ifprintd) fout.write((char*)&s, sizeof(Student));
+		
+		fin.close();
+		fout.close();
+		remove("students.txt");
+		rename("newstudents.txt", "students.txt");
+
+		dcrmntCopies(bname);
+
+	}
+	else;
+}
+
+void issueBook()
+{
+	cout << "Enter name of the Book: ";
+	char bname[50];
+	cin >> bname;
+	long long int positn = bookLocatn(bname);
+	
+	if (positn == -1) {
+		cout << endl << "sorry we don't have this book yet" << endl;
+		return;
+	}
+	else
+	{
+		ifstream fin("books.txt");
+		fin.seekg(positn, fin.beg);
+		Book b1;
+		fin.read((char*)&b1, sizeof(Book));
+		fin.close();
+		
+		if (!b1.ifLeft()) {
+			cout << endl << "The book is not available right now" << endl;
+			return;
+		}
+		else
+		{
+			cout << "Enter the roll number of student: ";
+			long long int rollNo;
+			cin >> rollNo;
+			ifstream finStudent("students.txt");
+			long long int studentPositn = studentLocatn(rollNo);
+			finStudent.close();
+			
+			if (studentPositn != -1) {
+				finStudent.seekg(studentPositn, finStudent.beg);
+				Student s1;
+				finStudent.read((char*)&s1, sizeof(Student));
+				
+				if (s1.totlIssued() == BOOK_LIMIT) {
+					cout << endl << "You have reached the limit of issued Books" << endl << "Return one or more books to issue new ones" << endl;
+					return;
+				}
+				else if(s1.ifIssued(bname)){
+					cout << endl << "You already issued this book" << endl << "You can't issue multiple copies of any book" << endl;
+					return;
+				}
+			}
+
+			issueBookNow(rollNo, bname);
+		}
 	}
 }
 
