@@ -18,6 +18,17 @@ createBkDatabs()	line: 211
 viewDatabasestd()	line: 233
 */
 
+void dateNtime(long int* date, int* Time)
+{
+	time_t t = time(0);
+	tm* now = localtime(&t);
+	char buf[20];
+	strftime(buf, 20, "%Y-%m-%d.%X", now);
+	buf;
+	*Time = 100 * now ->tm_hour + now -> tm_min;
+	*date = 1000000 * now ->tm_mday + 10000 * (now ->tm_mon + 1) + 1900 + now ->tm_year;
+}
+
 int dgtsIn(long long int x)
 {
 	int dig = 1;
@@ -35,7 +46,8 @@ long long int bookLocatn(char bname[]){			//binary search the database of the bo
 	ifstream fin("books.txt",ios::in);
 	int totalBook;
 	fin >> totalBook;
-	if(!totalBook)return -1;
+	Book b1;
+	if(!totalBook or !fin.read((char*)&b1, sizeof(Book))) return -1;
 	int dig = dgtsIn(totalBook);
 	
 	long long int beg = 0;
@@ -72,8 +84,12 @@ long long int studentLocatn(long long int rollNo)
 	ifstream fin("students.txt");
 	int totlStudents;
 	fin >> totlStudents;
+	Student s1;
 	
-	if (!totlStudents) return -1;
+	if (!totlStudents or !fin.read((char*)&s1, sizeof(Student))){
+		fin.close();
+		return -1;
+	}
 	
 	int digits = dgtsIn(totlStudents);
 	long long int begin = 0;
@@ -573,16 +589,10 @@ void issueBookNow(long long int rollNo, char bname[]){
 	
 	if (studentPositn == -1) {
 		Student s(rollNo, 0);
-		
-		time_t t = time(0);
-		tm* now = localtime(&t);
-		char buf[20];
-		strftime(buf, 20, "%Y-%m-%d.%X", now);
-		buf;
-
-		int time = (buf[15] - '0') + 10 * (buf[14] - '0') + 100 * (buf[12] - '0') + 1000 * (buf[11] - '0');
-		long int date = (buf[3] - '0') + 10 * (buf[2] - '0') + 100 * (buf[1] - '0') + 1000 * (buf[0] - '0') + 10000 * (buf[6] - '0') + 100000 * (buf[5] - '0') + 1000000 * (buf[9] - '0') + 10000000 * (buf[8] - '0');
-		struct IshDetails details(bname, date, time);
+		long int date;
+		int Time;
+		dateNtime(&date, &Time);
+		struct IshDetails details(bname, date, Time);
 		s.addDetails(&details);
 
 		ifstream fin("students.txt");
@@ -617,11 +627,34 @@ void issueBookNow(long long int rollNo, char bname[]){
 		fout.close();
 		remove("students.txt");
 		rename("newstudents.txt", "students.txt");
-
-		dcrmntCopies(bname);
-
 	}
-	else;
+	else{
+		ifstream fin("students.txt");
+		ofstream fout("newstudents.txt");
+		long long int totlStudents;
+		fin >> totlStudents;
+		fout << totlStudents;
+		Student s1;
+
+		while(fin.read((char*)&s1, sizeof(Student))){
+			
+			if (s1.RollNo() == rollNo) {
+				long int date;
+				int Time;
+				dateNtime(&date, &Time);
+				struct IshDetails details(bname, date, Time);
+				s1.addDetails(&details);
+			}
+			
+			fout.write((char*)&s1, sizeof(Student));
+		}
+
+		fin.close();
+		fout.close();
+		remove("students.txt");
+		rename("newstudents.txt", "students.txt");
+	}
+	dcrmntCopies(bname);
 }
 
 void issueBook()
@@ -657,10 +690,11 @@ void issueBook()
 			finStudent.close();
 			
 			if (studentPositn != -1) {
+				finStudent.open("students.txt");
 				finStudent.seekg(studentPositn, finStudent.beg);
 				Student s1;
 				finStudent.read((char*)&s1, sizeof(Student));
-				
+				finStudent.close();
 				if (s1.totlIssued() == BOOK_LIMIT) {
 					cout << endl << "You have reached the limit of issued Books" << endl << "Return one or more books to issue new ones" << endl;
 					return;
