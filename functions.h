@@ -248,9 +248,7 @@ void uploadStdnts()
 		fin >> rollNo;
 		int nob;
 		fin >> nob;
-		int fine;
-		fin >> fine;
-		Student s1(rollNo, fine);
+		Student s1(rollNo);
 		
 		for (int i = 0; i < nob; ++i)
 		{
@@ -588,7 +586,7 @@ void issueBookNow(long long int rollNo, char bname[]){
 	long long int studentPositn = studentLocatn(rollNo);
 	
 	if (studentPositn == -1) {
-		Student s(rollNo, 0);
+		Student s(rollNo);
 		long int date;
 		int Time;
 		dateNtime(&date, &Time);

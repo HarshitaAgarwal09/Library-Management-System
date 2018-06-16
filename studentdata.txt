@@ -1,16 +1,16 @@
 4
-006 1   23
+006 1
 advanced_engineering_mathematics
 29052018    0830
-013 2   20
+013 2
 playing_with_graphs
 13062018    1600
 advanced_engineering_mathematics
 13062018    1602
-035 1   0
+035 1
 playing_with_graphs_in_physics
 15062018    1941
-042 2   0
+042 2
 playing_with_graphs
 07062018    1330
 advanced_engineering_mathematics

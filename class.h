@@ -77,6 +77,83 @@ public:
 	}
 };
 
+bool isLeapYr(int yr)
+{
+	if(yr % 4) return false;
+	if(yr % 100) return true;
+	if(yr % 400) return false;
+	return true;
+}
+
+int daysInMnth(int mnth, int yr)
+{
+	int days;
+	switch(mnth)
+	{
+		case 1: days = 31;
+		break;
+		case 2: days = (isLeapYr(yr))? 28 : 29;
+		break;
+		case 3: days = 31;
+		break;
+		case 4: days = 30;
+		break;
+		case 5: days = 31;
+		break;
+		case 6: days = 30;
+		break;
+		case 7: days = 31;
+		break;
+		case 8: days = 31;
+		break;
+		case 9: days = 30;
+		break;
+		case 10: days = 31;
+		break;
+		case 11: days = 30;
+		break;
+		case 12: days = 31; 
+	}
+	return days;
+}
+
+int daysInBtw(long int dateP, long int dateI)
+{
+	int days = 0;
+	int prsntYr = dateP % 10000;
+	int prsntMnth = (dateP / 10000) % 100;
+	int prsntDay = dateP / 1000000;
+	int issueYr = dateI % 10000;
+	int issueMnth = (dateI / 10000) % 100;
+	int issueDay = dateI / 1000000;
+	
+	for(int yr = issueYr + 1; yr < prsntYr; yr++)
+	{
+		if(isLeapYr(yr)) days += 366;
+		else days += 365; 
+	}
+	
+	int uprLimit = (issueYr == prsntYr)?(prsntMnth - 1): 12;
+	for(int mnth = issueMnth + 1; mnth <= uprLimit; mnth++) days += daysInMnth(mnth, issueYr);
+	
+	int lwrLimit = (issueYr == prsntYr)? prsntMnth :1;
+	for(int mnth = lwrLimit; mnth < prsntMnth; mnth ++) days += daysInMnth(mnth, prsntYr);	
+
+	days += (issueMnth == prsntMnth)?(prsntDay - issueDay): daysInMnth(issueMnth, issueYr) - issueDay + prsntDay;
+	return days;	
+}
+
+void dateTime(long int* date, int* Time)
+{
+	time_t t = time(0);
+	tm* now = localtime(&t);
+	char buf[20];
+	strftime(buf, 20, "%Y-%m-%d.%X", now);
+	buf;
+	*Time = 100 * now ->tm_hour + now -> tm_min;
+	*date = 1000000 * now ->tm_mday + 10000 * (now ->tm_mon + 1) + 1900 + now ->tm_year;
+}
+
 struct IshDetails
 {
 	long int date = -1;
@@ -98,14 +175,12 @@ class Student
 private:
 	long long int rollNo;
 	int booksIssued;
-	int fine;
 	struct IshDetails details[BOOK_LIMIT];
 public:
-	Student(long long int rn, int fn)
+	Student(long long int rn)
 	{
 		rollNo = rn;
 		booksIssued = 0;
-		fine = fn;
 		struct IshDetails s;
 		details[0] = s;
 	}
@@ -119,6 +194,30 @@ public:
 
 	int totlIssued(){
 		return booksIssued;
+	}
+
+	int updateFine()
+	{
+		int Fine = 0;
+		long int date;
+		int Time;
+		dateTime(&date, &Time);
+		
+		for(int i = 0; i < booksIssued; i++)
+		{
+			int days = daysInBtw(date, details[i].date);
+			
+			if(days <= 15)continue;
+			else days -= 15;
+			
+			Fine += min(7, days);
+			
+			if (days > 7) {
+				Fine += 10 * (days - 7);
+			}
+		}
+		
+		return Fine;		
 	}
 
 	bool ifIssued(char bname[]){
@@ -139,6 +238,7 @@ public:
 
 	void printDetails()
 	{
+		int fine = updateFine();
 		cout << "Student Roll number: " << rollNo <<endl;
 		cout << "Fine on Student: " <<fine << endl;
 		cout << "Book issued on Student: " << booksIssued << endl;
@@ -152,6 +252,7 @@ public:
 
 	void printDetails(int x)
 	{
+		int fine = updateFine();
 		cout << "Fine on Student: " <<fine << endl;
 		cout << "Book issued on Student: "<< booksIssued << endl;
 		for (int i = 0; i < booksIssued; ++i)
