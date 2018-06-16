@@ -6,14 +6,22 @@
 
 using namespace std;
 
-int main() {																	
-	cout << "(1)Add a book\n(2)Search a book\n(3)Search a student\n(4)View database of Book\n(5)View database of students\n";
-	cout << "(6)Upload Book\n(7)Upload students\n(8)Issue a book\n(9)Exit" << endl;
-	char c;
-
-	do{	
+int main(int argc, char const *argv[]) {																	
+	char c;	
+	do{
+		if(argc == 1)cout << "(1)Add a book\n(2)Search a book\n(3)Search a student\n(4)View database of Book\n(5)View database of students\n";
+		if(argc == 1)cout << "(6)Upload Books\n(7)Upload students\n(8)Issue a book\n(9)Exit" << endl;
 		cin >> c;
 		cin.ignore();
+		
+		if (argc != 1) {
+			int Time;
+			long int date;
+			dateNtime(&date, &Time);
+			cout << date / 1000000 << "-" << (date % 1000000) / 10000 << "-" << date % 10000 << "\t";
+			cout << Time / 100 << ":" << Time % 100 << endl;
+		}
+
 		switch(c){
 			case '1': AddBook();
 			break;	
@@ -30,9 +38,18 @@ int main() {
          	case '7': uploadStdnts();
          	break;
 			case '8': issueBook();
-			default:;
-		};
-	} while (c != '9');
+			break;
+			case '9': return 0;
+		}
+
+		if(argc == 1){
+			fflush(stdin);
+			char x[1];
+			cin.getline(x, 1);
+			system("CLS");
+		}
+
+	} while (c != '9' and argc == 1);
 
 	return 0;
 }

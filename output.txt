@@ -1,19 +1,27 @@
-(1)Add a book
-(2)View database of Book
-(3)Search a book
-(4)Upload students
-(5)Upload Book
-(6)View database of students
-(7)Exit
-Total number of students: 2
-Student Roll number: 1
-Fine on Student: 0
-Book issued on Student: 
-diary_of_a_young_girl	13-5-2018	15:32
+16-6-2018	17:22
 
-Student Roll number: 2
-Fine on Student: 130
-Book issued on Student: 
-story_of_my_life	13-5-2018	17:4
-let_us_c	13-5-2018	17:5
+Total number of students: 4
+
+Student Roll number: 6
+Fine on Student: 3
+Book issued on Student: 1
+advanced_engineering_mathematics	29-5-2018	8:30
+
+Student Roll number: 13
+Fine on Student: 0
+Book issued on Student: 2
+playing_with_graphs	13-6-2018	16:0
+advanced_engineering_mathematics	13-6-2018	16:2
+
+Student Roll number: 35
+Fine on Student: 0
+Book issued on Student: 1
+playing_with_graphs_in_physics	15-6-2018	19:41
+
+Student Roll number: 42
+Fine on Student: 0
+Book issued on Student: 3
+playing_with_graphs	7-6-2018	13:30
+advanced_engineering_mathematics	7-6-2018	13:30
+_1001_inventions	16-6-2018	16:46
 
