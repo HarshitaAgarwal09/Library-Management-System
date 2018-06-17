@@ -18,16 +18,7 @@ createBkDatabs()	line: 211
 viewDatabasestd()	line: 233
 */
 
-void dateNtime(long int* date, int* Time)
-{
-	time_t t = time(0);
-	tm* now = localtime(&t);
-	char buf[20];
-	strftime(buf, 20, "%Y-%m-%d.%X", now);
-	buf;
-	*Time = 100 * now ->tm_hour + now -> tm_min;
-	*date = 1000000 * now ->tm_mday + 10000 * (now ->tm_mon + 1) + 1900 + now ->tm_year;
-}
+
 
 int dgtsIn(long long int x)
 {
@@ -653,6 +644,7 @@ void issueBookNow(long long int rollNo, char bname[]){
 		rename("newstudents.txt", "students.txt");
 	}
 	dcrmntCopies(bname);
+	cout << endl << "Issued \"" << bname << "\" to Roll Number " << rollNo << endl;
 }
 
 void issueBook()
@@ -693,6 +685,12 @@ void issueBook()
 				Student s1;
 				finStudent.read((char*)&s1, sizeof(Student));
 				finStudent.close();
+			
+				if(s1.updateFine()){
+					cout << endl << "Please pay the pending fine of Rs. " << s1.updateFine() << "." << endl << "Until then you cannot issue new books." << endl;
+					return;
+				}
+				
 				if (s1.totlIssued() == BOOK_LIMIT) {
 					cout << endl << "You have reached the limit of issued Books" << endl << "Return one or more books to issue new ones" << endl;
 					return;
@@ -706,6 +704,89 @@ void issueBook()
 			issueBookNow(rollNo, bname);
 		}
 	}
+}
+
+void returnBook()
+{
+	cout << "Enter roll number of the student: ";
+	long long int rollNo;
+	cin >> rollNo;
+	long long int studentPositn = studentLocatn(rollNo);
+	
+	if (studentPositn == -1) {
+		cout << endl << "You do not own any book to submit !!" << endl;
+		return;
+	}
+
+	ifstream fin("students.txt");
+	fin.seekg(studentPositn, fin.beg);
+	Student s1;
+	fin.read((char*)&s1, sizeof(Student));
+	cout << "Enter the title of the book you want to submit: ";
+	char bname[50];
+	cin >> bname;
+	
+	if(!s1.ifIssued(bname)){
+		cout << endl << "You do not own this book right now" << endl;
+		return;
+	}
+
+	int fine = s1.fineOn(bname);
+	
+	if(fine){
+		cout << endl << "Pay a fine of Rs. " << fine << " to return this book." << endl;
+		cout << "Do want to return this Book now? (Y / N)" << endl;
+		char c;
+		cin >> c;
+		if(c != 'Y' and c != 'y') return;
+	}
+
+	s1.Return(bname);
+	bool removes1 = false;
+	
+	if (!s1.totlIssued()) removes1 = true; 
+	
+	ofstream fout("newstudents.txt");
+	fin.seekg(0, fin.beg);
+	int totlStudents;
+	fin >> totlStudents;
+	
+	if(!removes1)fout << totlStudents;
+	else fout << totlStudents - 1;
+
+	Student s2;
+
+	while(fin.read((char*)&s2, sizeof(Student))){
+		if (s2.RollNo() == rollNo and !removes1) fout.write((char*)&s1, sizeof(Student));
+		else if(s2.RollNo() == rollNo) continue;
+		else fout.write((char*)&s2, sizeof(Student));
+	}
+
+	fin.close();
+	fout.close();
+	remove("students.txt");
+	rename("newstudents.txt","students.txt");
+	fin.open("books.txt");
+	fout.open("newbooks.txt");
+	int totalBooks;
+	fin >> totalBooks;
+	fout << totalBooks;
+	Book b1;
+	
+	while(fin.read((char*)&b1, sizeof(Book))){
+		char bname2[50];
+		b1.name(bname2);
+		bname2;
+		if (!strcmp(bname2, bname)) b1.Return();
+
+		fout.write((char*)&b1, sizeof(Book));
+	}
+
+	fin.close();
+	fout.close();
+	remove("books.txt");
+	rename("newbooks.txt", "books.txt");
+	cout << endl << "Your book is returned" << endl;
 }
 
 #endif

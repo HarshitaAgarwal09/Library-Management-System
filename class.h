@@ -40,6 +40,10 @@ public:
 		return NoOfCopies;
 	}
 
+	void Return(){
+		NoOfLeftCps++;
+	}
+
 	void mergeBooks(int cps, int left)
 	{
 		NoOfCopies += cps;
@@ -143,7 +147,7 @@ int daysInBtw(long int dateP, long int dateI)
 	return days;	
 }
 
-void dateTime(long int* date, int* Time)
+void dateNtime(long int* date, int* Time)
 {
 	time_t t = time(0);
 	tm* now = localtime(&t);
@@ -201,7 +205,7 @@ public:
 		int Fine = 0;
 		long int date;
 		int Time;
-		dateTime(&date, &Time);
+		dateNtime(&date, &Time);
 		
 		for(int i = 0; i < booksIssued; i++)
 		{
@@ -220,6 +224,18 @@ public:
 		return Fine;		
 	}
 
+	void Return(char bname[50]){
+		for(int i = 0, j = 0; i < booksIssued; i++, j++)
+		{
+			if (!strcmp(details[i].Title, bname)) ++ i;
+			if(i == booksIssued) break;
+			
+			details[j] = details[i];
+		}
+
+		-- booksIssued;
+	}
+
 	bool ifIssued(char bname[]){
 		
 		for(int i = 0; i < booksIssued; i++)
@@ -229,6 +245,8 @@ public:
 
 		return false;
 	}
+
+
 
 	void addDetails(struct IshDetails* s)
 	{
@@ -261,6 +279,24 @@ public:
 			cout << '\t' << details[i].time / 100 << ":" << details[i].time % 100 << endl;
 
 		}
+	}
+
+	int fineOn(char bname[50])
+	{
+		int i;
+		
+		for(i = 0; i < booksIssued; i++) if(strcmp(details[i].Title, bname) == 0) break;	
+		
+		long int date;
+		int Time;
+		dateNtime(&date, &Time);
+		int days = daysInBtw(date, details[i].date);
+		
+		if (days <= 15) return 0;
+		
+		days -= 15;
+		if(days <= 7) return days;
+		else return 7 + (days - 7) * 10;
 	}
 };
 
