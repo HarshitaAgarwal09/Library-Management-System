@@ -1,0 +1,28 @@
+17-6-2018	21:22
+
+Total number of Book: 4
+
+Name of the Book: _1001_inventions
+Author of the Book: trevor_baylis
+Price of the Book: 500
+Total number of copies of Book: 2
+Number of copies available: 1
+
+Name of the Book: advanced_engineering_mathematics
+Author of the Book: jain_iyenger
+Price of the Book: 500
+Total number of copies of Book: 3
+Number of copies available: 1
+
+Name of the Book: playing_with_graphs
+Author of the Book: amit_m_agarwal
+Price of the Book: 120
+Total number of copies of Book: 2
+Number of copies available: 0
+
+Name of the Book: playing_with_graphs_in_physics
+Author of the Book: ajay_pratap_singh
+Price of the Book: 120
+Total number of copies of Book: 3
+Number of copies available: 1
+
