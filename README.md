@@ -9,4 +9,4 @@ A Book object represents a real life book with the following attributes: Title, 
 <b>Student: </b>
 A student object is the virtualisation of a physical library student having the following attributes: Roll Number, Number of books issued to the student and the details regarding the time of issue, date of issue and the title of book issued, all these details are packed together in form of an structure object <i>IshDetails</i>.
 
-Both of the above objects can be found in [class.h](class.h).
+Both of the above objects and the structure object <i>IshDetails</i> can be found in [class.h](class.h).
