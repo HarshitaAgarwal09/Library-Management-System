@@ -20,8 +20,8 @@ Now follows a brief introduction of varios methods used in the software.
 
 <b>UploadBooks()</b>: Uploads multiple books (<i>say M</i>) at once, into the book database. The list of books to be uploaded is to be provided (<i>not necessarily sorted</i>) in <i>bookdata.txt</i> in [this](howToUploadBooks.txt) format. Make sure <b>not to repeat any book</b> in <i>bookdata.txt</i> as it will corrupt the book database. For faster processing the list of books is converted into a vector object, hence, the maximum number of books which can be uploaded at once will depend on your machine. This vector object is then sorted on the basis of book titles in <b>O(log(M))</b> time (<i>using quicksort</i>) and is then merged with the book database in <b>O(N + M)</b> time.
 
-<b>searchStudent</b>: Searches for a student in the student database in <b>O(log(N))</b> time (<i>using binary search</i>).
+<b>searchStudent()</b>: Searches for a student in the student database in <b>O(log(N))</b> time (<i>using binary search</i>).
 
-<b>viewStudents</b>: Simply prints the database of students in <b>O(log(N))</b> time. If no database exists, an error message is flashed on screen.
+<b>viewStudents()</b>: Simply prints the database of students in <b>O(log(N))</b> time. If no database exists, an error message is flashed on screen.
 
 
