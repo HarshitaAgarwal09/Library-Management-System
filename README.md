@@ -22,6 +22,6 @@ Now follows a brief introduction of varios methods used in the software.
 
 <b>searchStudent()</b>: Searches for a student in the student database in <b>O(log(N))</b> time (<i>using binary search</i>).
 
-<b>viewStudents()</b>: Simply prints the database of students in <b>O(log(N))</b> time. If no database exists, an error message is flashed on screen.
+<b>viewStudents()</b>: Simply prints the database of students in <b>O(N)</b> time. If no database exists, an error message is flashed on screen.
 
 
