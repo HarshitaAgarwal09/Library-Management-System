@@ -12,3 +12,5 @@ Both of the above objects and the structure object <i>IshDetails</i> can be foun
 Now follows a brief introduction of varios methods used in the software.
 
 <b>AddBook()</b>: Adds a single book into the book database of the library. After reading the title of the book to be uploaded the function smartly checks for any pre-existance of the book, if the book already exists in the database, only number of copies of the book is incremented. The function requires <b>O(log(N))</b> time in case book already exists (<i>using binary search</i>), and <b>log(N)</b> time in case its a new book. Here N is the total number of books present in the database of books.
+
+<b>searchBook()</b>: Searches for a book in the book database using the title of the book. The function requires <b>O(log(N)></b> time for its job (<i>using binary search</i>).
