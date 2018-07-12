@@ -210,7 +210,7 @@ void searchBook()
 	else cout << "We don't have this book !!" << endl;
 }
 
-void uploadStdnts()
+void uploadStudents()
 {
 	ifstream fin("studentdata.txt");
 	char c;
@@ -385,7 +385,7 @@ void uploadBooks()
 		struct srting s(num, bname);
 		dummy.push_back(s);
 	}
-	
+
 	finNew.close();
 	fout.close();
 	finNew.open("newdata.txt");

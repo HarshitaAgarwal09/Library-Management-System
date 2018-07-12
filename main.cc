@@ -35,7 +35,7 @@ int main(int argc, char const *argv[]) {
   	       	break;
          	case 6: uploadBooks();
          	break;
-         	case 7: uploadStdnts();
+         	case 7: uploadStudents();
          	break;
 			case 8: issueBook();
 			break;
