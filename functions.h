@@ -7,19 +7,6 @@
 #include <D:\Git\Library-Management-System\class.h>
 using namespace std;
 
-/*
-dgtsIn()			line: 17
-bookbookLocatn()		line: 30
-AddBook()			line: 72
-viewDatabase()		line: 141
-searchBook()		line: 156
-uploadStdnts()	line: 175
-createBkDatabs()	line: 211
-viewDatabasestd()	line: 233
-*/
-
-
-
 int dgtsIn(long long int x)
 {
 	int dig = 1;
