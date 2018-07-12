@@ -16,7 +16,7 @@ Now follows a brief introduction of varios methods used in the software.
 
 <b>searchBook()</b>: Searches for a book in the book database using the title of the book. The function requires <b>O(log(N)</b> time for its job (<i>using binary search</i>).
 
-<b>viewBooks()</b>: If database of books exists (<i>books.txt</b>), it simply prints the complete database of the books in <b>O(N)</b> time. Otherwise, an error message is shown. 
+<b>viewBooks()</b>: If database of books exists (<i>books.txt</i>), it simply prints the complete database of the books in <b>O(N)</b> time. Otherwise, an error message is shown. 
 
 <b>UploadBooks()</b>: Uploads multiple books (<i>say M</i)> at once, into the book database. The list of books to be uploaded is to be provided (<i>not necessarily sorted</i>) in <i>bookdata.txt</b> in [this](howToUploadBooks.txt) format. Make sure not to repeat any book in <i>bookdata.txt</i> as it will corrupt the book database. For faster processing the list of books is converted into a vector object, hence, the maximum number of books which can be uploaded at once will depend on your machine. This vector object is then sorted on the basis of book titles in <b>O(log(M))</b> time (<i>using quicksort</i>) and is then merged with the book database in <b>O(N + M)</b> time.
 
