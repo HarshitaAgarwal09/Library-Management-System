@@ -33,7 +33,7 @@ int main(int argc, char const *argv[]) {
          	break;
          	case 5: viewStudents();
   	       	break;
-         	case 6: uploadBook();
+         	case 6: uploadBooks();
          	break;
          	case 7: uploadStdnts();
          	break;

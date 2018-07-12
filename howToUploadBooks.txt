@@ -1,0 +1,6 @@
+total_number_of_books
+title_of_first_book
+name_of_author
+price   number_of_copies_owned  number_of_copies_presently_available
+//now follows other remaining books
+//DO NOT REPEAT ANY BOOKS IN THIS FILE  

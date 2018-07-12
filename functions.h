@@ -172,8 +172,17 @@ void viewBooks()
 {
 	ifstream fin("books.txt");
 	int totalBook;
+	
+	if (!fin.read((char*)&totalBook, sizeof(int))) {
+		cout << "No database of books exist" << endl;
+		return;
+	}
+
+	fin.seekg(0, fin.beg);
 	fin >> totalBook;
-	cout << endl << "Total number of Book: " << totalBook << endl << endl;
+	int dig = dgtsIn(totalBook);
+	fin.seekg(dig, fin.beg);
+	cout << endl << "Total number of Books: " << totalBook << endl << endl;
 	Book book;
 	while(fin.read((char*)&book, sizeof(book)))
 	{
@@ -295,12 +304,12 @@ void uploadStdnts()
 		}
 		else break;
 	}
-fin.close();
-finOld.close();
-fout.close();
-remove("students.txt");
-remove("studentsBin.txt");
-rename("newStdnts.txt", "students.txt");	
+	fin.close();
+	finOld.close();
+	fout.close();	
+	remove("students.txt");
+	remove("studentsBin.txt");
+	rename("newStdnts.txt", "students.txt");	
 }	
 
 
@@ -339,7 +348,7 @@ void quickSrt(std::vector<struct srting>* dummy, int beg, int end)
 }
 
 
-void uploadBook()
+void uploadBooks()
 {
 	ifstream finNew("bookdata.txt");
 	ofstream fout("newdata.txt");
@@ -376,6 +385,7 @@ void uploadBook()
 		struct srting s(num, bname);
 		dummy.push_back(s);
 	}
+	
 	finNew.close();
 	fout.close();
 	finNew.open("newdata.txt");
@@ -494,7 +504,7 @@ void viewStudents()
 	int totl;
 	
 	if (!fin.read((char *)&totl, sizeof(int))){
-		cout << endl << "Total number of students: 0" << endl;
+		cout << endl << "No database of students exists" << endl;
 		return;
 	}
 	fin.seekg(0, fin.beg);
