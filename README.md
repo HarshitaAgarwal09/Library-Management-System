@@ -13,7 +13,7 @@ Both of the above objects and the structure object <i>IshDetails</i> can be foun
 1. Multiple Book, Student uploads from text files in single step.
 2. Multiple Book uploads from unsorted list of Books stored in text file.
 3. Fast student and book searches in logarithmic time.
-4. database printing in text files like [this](screenshot(385).png).
+4. database printing in text files like [this](databaseprint.png).
 5. Automatic date / time detection from system clock.
 
 Now follows a brief introduction of varios methods used in the software.
