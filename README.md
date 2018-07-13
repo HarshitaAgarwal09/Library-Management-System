@@ -24,7 +24,7 @@ Now follows a brief introduction of varios methods used in the software.
 
 <b>viewStudents()</b>: Simply prints the database of students in <b>O(N)</b> time. If no database exists, an error message is flashed on screen.
 
-<b>UploadStudents()</b>: Uploads multiple students at once into the student database. The list of students to be uploaded is to be present in <i>studentdata.txt</i> in [this](howToUploadStudents) format, Unlike <i>UploadBooks()</i> the list of students needs to be sorted according to student roll numbers. The functionality of automatically sorting the student list can be added on demand. The software simply merges <i>studentdata.txt</i> with student database in <b>O(N + M)</b> time.
+<b>UploadStudents()</b>: Uploads multiple students at once into the student database. The list of students to be uploaded is to be present in <i>studentdata.txt</i> in [this](howToUploadStudents.txt) format, Unlike <i>UploadBooks()</i> the list of students needs to be sorted according to student roll numbers. The functionality of automatically sorting the student list can be added on demand. The software simply merges <i>studentdata.txt</i> with student database in <b>O(N + M)</b> time.
 
 <b>issueBook()</b>: Issues a book to a student. The method if way more smarter than it may seem. First it checks whether the book is available or not in <b>O(log(N))</b> time. Then it accesses student details in <b>O(log(N))</b> time, if the student is not in a position of getting the book (<i>unpaid fine, book limit exceeding etc</i>) the request is rejected. Otherwise, the book is issued to the student in <b>O(N)</b> time (<i>N being number of students for now</i>), at the same time, number of copies of books available is decremented.
 
