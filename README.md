@@ -9,8 +9,15 @@ In comparison to other library management softwares avaiable in the market, this
 
 Both of the above objects and the structure object <i>IshDetails</i> can be found in [class.h](class.h).
 
+<b><b>Major Highlights</b></b>: 
+1. Multiple Book, Student uploads from text files in single step.
+2. Multiple Book uploads from unsorted list of Books stored in text file.
+3. 
+
 Now follows a brief introduction of varios methods used in the software.
-(<i>in the following time considerations N represents the total number of students/books present in the respective database</i>)
+<b>Note</b>: In the following time considerations N represents the total number of students/books present in the respective database.
+            book database: <i>books.txt</i>
+            student database: <i>students.txt</i> 
 
 <b>AddBook()</b>: Adds a single book into the book database of the library. After reading the title of the book to be uploaded the                         function smartly checks for any pre-existance of the book, if the book already exists in the database, only number of                    copies of the book is incremented. The function requires <b>O(log(N))</b> time in case book already exists (<i>using                     binary search</i>), and <b>log(N)</b> time in case its a new book.
 
