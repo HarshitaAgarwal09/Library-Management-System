@@ -18,10 +18,16 @@ Now follows a brief introduction of varios methods used in the software.
 
 <b>viewBooks()</b>: If database of books exists (<i>books.txt</i>), it simply prints the complete database of the books in <b>O(N)</b> time. Otherwise, an error message is shown. 
 
-<b>UploadBooks()</b>: Uploads multiple books (<i>say M</i>) at once, into the book database. The list of books to be uploaded is to be provided (<i>not necessarily sorted</i>) in <i>bookdata.txt</i> in [this](howToUploadBooks.txt) format. Make sure <b>not to repeat any book</b> in <i>bookdata.txt</i> as it will corrupt the book database. For faster processing the list of books is converted into a vector object, hence, the maximum number of books which can be uploaded at once will depend on your machine. This vector object is then sorted on the basis of book titles in <b>O(log(M))</b> time (<i>using quicksort</i>) and is then merged with the book database in <b>O(N + M)</b> time.
+<b>UploadBooks()</b>: Uploads multiple books (<i>say M</i>) at once, into the book database. The list of books to be uploaded is to be provided (<i>not necessarily sorted</i>) in <i>bookdata.txt</i> in [this](howToUploadBooks.txt) format. Make sure <b>not to repeat any book</b> in <i>bookdata.txt</i> as it will corrupt the book database. For faster processing the list of books is converted into a vector object, hence, the maximum number of books which can be uploaded at once will depend on your machine. This vector object is then sorted on the basis of book titles in <b>O(log(M))</b> time (<i>using quicksort</i>) and is then merged with the book database in <b>O(N + M)</b> time. Overall time complexity remains <b>O(N + M)</b>.
 
 <b>searchStudent()</b>: Searches for a student in the student database in <b>O(log(N))</b> time (<i>using binary search</i>).
 
 <b>viewStudents()</b>: Simply prints the database of students in <b>O(N)</b> time. If no database exists, an error message is flashed on screen.
+
+<b>UploadStudents()</b>: Uploads multiple students at once into the student database. The list of students to be uploaded is to be present in <i>studentdata.txt</i> in [this](howToUploadStudents) format, Unlike <i>UploadBooks()</i> the list of students needs to be sorted according to student roll numbers. The functionality of automatically sorting the student list can be added on demand. The software simply merges <i>studentdata.txt</i> with student database in <b>O(N + M)</b> time.
+
+<b>issueBook()</b>: Issues a book to a student. The method if way more smarter than it may seem. First it checks whether the book is available or not in <b>O(log(N))</b> time. Then it accesses student details in <b>O(log(N))</b> time, if the student is not in a position of getting the book (<i>unpaid fine, book limit exceeding etc</i>) the request is rejected. Otherwise, the book is issued to the student in <b>O(N)</b> time (<i>N being number of students for now</i>), at the same time, number of copies of books available is decremented.
+
+<b>returnBook()</b>: Returns any book owned by a student. First it is checked whether the student holds the book or not in <b>O(log(N))</b> time. If the student owns the book and holds a fine on the book, the student is prompted to either pay the fine or return book later. If the student doesn't owns any fine on the current book, the book is directly returned to the database in <b>O(N)</b> time.
 
 
