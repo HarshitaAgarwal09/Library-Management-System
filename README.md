@@ -17,6 +17,7 @@ Both of the above objects and the structure object <i>IshDetails</i> can be foun
 5. Automatic date / time detection from system clock.
 
 Now follows a brief introduction of varios methods used in the software.
+
 <b>Note</b>: In the following time considerations N represents the total number of students/books present in the respective database.
             book database: <i>books.txt</i>
             student database: <i>students.txt</i> 
