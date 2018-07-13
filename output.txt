@@ -1,27 +1,34 @@
-13-7-2018	19:24
+13-7-2018	19:31
 
-Total number of students: 4
+Total number of Books: 5
 
-Student Roll number: 2
-Fine on Student: 0
-Book issued on Student: 3
-diary_of_a_young_girl	13-7-2018	19:20
-_1001_inventions	13-7-2018	19:20
-playing_with_graphs	13-7-2018	19:21
+Name of the Book: _1001_inventions
+Author of the Book: trevor_baylis
+Price of the Book: 500
+Total number of copies of Book: 4
+Number of copies available: 3
 
-Student Roll number: 13
-Fine on Student: 87
-Book issued on Student: 1
-advanced_engineering_mathematics	13-6-2018	16:2
+Name of the Book: advanced_engineering_mathematics
+Author of the Book: jain_iyenger
+Price of the Book: 500
+Total number of copies of Book: 6
+Number of copies available: 1
 
-Student Roll number: 35
-Fine on Student: 67
-Book issued on Student: 1
-playing_with_graphs_in_physics	15-6-2018	19:41
+Name of the Book: diary_of_a_young_girl
+Author of the Book: anne_frank
+Price of the Book: 120
+Total number of copies of Book: 12
+Number of copies available: 11
 
-Student Roll number: 42
-Fine on Student: 294
-Book issued on Student: 2
-playing_with_graphs	7-6-2018	13:30
-advanced_engineering_mathematics	7-6-2018	13:30
+Name of the Book: playing_with_graphs
+Author of the Book: amit_m_agarwal
+Price of the Book: 120
+Total number of copies of Book: 4
+Number of copies available: 0
+
+Name of the Book: playing_with_graphs_in_physics
+Author of the Book: ajay_pratap_singh
+Price of the Book: 120
+Total number of copies of Book: 6
+Number of copies available: 4
 
