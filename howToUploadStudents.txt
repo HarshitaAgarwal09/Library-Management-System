@@ -2,6 +2,6 @@ total number of students
 student_roll_number     number_of_books_issued_by_student
 title_of_first_book
 date(DDMMYY)    time(HHMM)
-//any_other_book_if_issued
+//any_other_book_if_issued_on_same_student
 
 //other_students_if_present
